@@ -32,6 +32,7 @@ class FrontpageViewModel : ViewModel() {
         val newNumOfLives : Int
         var tempBalance = uiState.value.tempBalance
         var balance = uiState.value.balance
+        var guessedLettersList = uiState.value.guessedLetters
 
         for (i in 0 until uiState.value.wordDrawn.length){
             newList.add(i,uiState.value.wordSoFar[i])
@@ -44,7 +45,8 @@ class FrontpageViewModel : ViewModel() {
             newNumOfLives = numOfLives-1
             numOfLives = newNumOfLives
         }
-        _uiState.update { it.copy(wordSoFar = newList, amountOfLives = numOfLives, balance = balance, tempBalance = 0) }
+        guessedLettersList.add(char.single())
+        _uiState.update { it.copy(wordSoFar = newList, amountOfLives = numOfLives, balance = balance, tempBalance = 0, guessedLetters = guessedLettersList) }
     }
     fun updateWordDrawn(word : String){
         val word = word.toUpperCase()

@@ -15,4 +15,5 @@ data class States(
     var amountOfLives: Int = 5,
     var balance: Int = 0,
     var tempBalance : Int = 0,
+    var guessedLetters: MutableList<Char> = mutableListOf()
 )
