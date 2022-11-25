@@ -6,6 +6,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -28,6 +29,8 @@ fun FrontPage(navController: NavController, viewModel: FrontpageViewModel){
 
 @Composable
 fun FrontPageContent(navController: NavController, viewModel: FrontpageViewModel, states: States) {
+    var guessEnabled by remember { mutableStateOf(false) }
+    var spinEnabled by remember { mutableStateOf(true) }
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()) {
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -37,7 +40,7 @@ fun FrontPageContent(navController: NavController, viewModel: FrontpageViewModel
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Text(text = "Category: Phrases",fontSize = 25.sp)
+        Text(text = "Category: Phrases", fontSize = 25.sp)
 
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -46,43 +49,46 @@ fun FrontPageContent(navController: NavController, viewModel: FrontpageViewModel
 
         TextButton(onClick = {
             viewModel.spinTheWheel()
-        }) {
+            guessEnabled = true
+            spinEnabled = false
+        }, enabled = spinEnabled) {
             Text(text = "Drej hjulet")
 
         }
 
         Spacer(modifier = Modifier.height(50.dp))
 
-        val displayText = viewModel.uiState.value.wordSoFar
-        Text(text = displayText.toString())
+            val displayText = viewModel.uiState.value.wordSoFar
+            Text(text = displayText.toString())
 
-        Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-        OutlinedTextField(
-            value = character,
-            label = { Text(text = "Bogstav") },
-            modifier = Modifier
-                .width(90.dp),
-            onValueChange = { character = it }
-        )
+            OutlinedTextField(
+                value = character,
+                label = { Text(text = "Bogstav") },
+                modifier = Modifier
+                    .width(90.dp),
+                onValueChange = { character = it },
+                enabled = guessEnabled
+            )
 
-        Spacer(modifier = Modifier.width(50.dp))
+            Spacer(modifier = Modifier.width(50.dp))
 
-        TextButton(onClick = {
-            viewModel.updateWordSoFar(character)
-        }) {
-            Text(text = "Gæt")
+            TextButton(onClick = {
+                viewModel.updateWordSoFar(character)
+                spinEnabled = true
+                guessEnabled = false
+            }, enabled = guessEnabled) {
+                Text(text = "Gæt")
 
-        }
+            }
 
-        Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
-        val livesText = viewModel.uiState.value.amountOfLives
-        Text(text = "$livesText liv tilbage")
+            val livesText = viewModel.uiState.value.amountOfLives
+            Text(text = "$livesText liv tilbage")
 
-        val balanceText = viewModel.uiState.value.balance
-        Text(text = "Balance: $balanceText")
-
-
+            val balanceText = viewModel.uiState.value.balance
+            Text(text = "Balance: $balanceText")
     }
 }

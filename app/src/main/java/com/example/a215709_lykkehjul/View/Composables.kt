@@ -34,8 +34,6 @@ fun BottomBar(){
     BottomAppBar(
 
     ) {
-        BottomNavigation {
 
-        }
     }
 }
