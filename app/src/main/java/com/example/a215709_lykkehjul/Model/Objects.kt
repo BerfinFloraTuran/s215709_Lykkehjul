@@ -12,5 +12,7 @@ data class Word(
 data class States(
     var wordDrawn: String = "",
     var wordSoFar: MutableList<Char> = mutableListOf<Char>(),
-    var amountOfLives: Int = 5
+    var amountOfLives: Int = 5,
+    var balance: Int = 0,
+    var tempBalance : Int = 0,
 )

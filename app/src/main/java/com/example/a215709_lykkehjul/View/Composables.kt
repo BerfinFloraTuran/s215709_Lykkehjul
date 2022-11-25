@@ -35,21 +35,7 @@ fun BottomBar(){
 
     ) {
         BottomNavigation {
-            BottomNavigationItem(
-                icon = {
-                    Icon(imageVector = Icons.Default.Menu, contentDescription = "" )},
-                label = { Text(text = "Menu") },
-                selected = false,
-                onClick = { })
-            BottomNavigationItem(
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        "")
-                },
-                label = { Text(text = "Søg") },
-                selected = false,
-                onClick = {})
+
         }
     }
 }
