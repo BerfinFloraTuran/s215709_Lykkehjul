@@ -1,4 +1,4 @@
-package com.example.a215709_lykkehjul.Model
+package com.example.a215709_lykkehjul.model
 
 data class Category(
     var title: String,

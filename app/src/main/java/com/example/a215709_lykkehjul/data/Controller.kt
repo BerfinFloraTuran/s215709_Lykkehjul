@@ -1,7 +1,7 @@
-package com.example.a215709_lykkehjul.Data
+package com.example.a215709_lykkehjul.data
 
-import com.example.a215709_lykkehjul.Model.Category
-import com.example.a215709_lykkehjul.Model.Word
+import com.example.a215709_lykkehjul.model.Category
+import com.example.a215709_lykkehjul.model.Word
 
 class Controller {
     var categoryData = CategoryData()

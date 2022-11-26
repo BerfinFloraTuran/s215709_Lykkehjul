@@ -1,22 +1,15 @@
-package com.example.a215709_lykkehjul.View
+package com.example.a215709_lykkehjul.view
 
-import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExitToApp
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.a215709_lykkehjul.Data.Controller
-import com.example.a215709_lykkehjul.ViewModel.FrontpageViewModel
+import com.example.a215709_lykkehjul.data.Controller
+import com.example.a215709_lykkehjul.viewModel.FrontpageViewModel
 
 @Composable
 fun NavController(){

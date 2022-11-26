@@ -1,4 +1,4 @@
-package com.example.a215709_lykkehjul.View
+package com.example.a215709_lykkehjul.view
 
 import android.app.Activity
 import androidx.compose.foundation.layout.*
@@ -16,24 +16,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
-import com.example.a215709_lykkehjul.Model.States
-import com.example.a215709_lykkehjul.ViewModel.FrontpageViewModel
+import com.example.a215709_lykkehjul.viewModel.FrontpageViewModel
 
 @Composable
 fun FrontPage(navController: NavController, viewModel: FrontpageViewModel){
-    val state = viewModel.uiState.collectAsState()
     val backgroundColor = "#fff6f7"
-    //viewModel.updateWordDrawn("Tiger")
     Scaffold(
         backgroundColor = Color(backgroundColor.toColorInt()),
         topBar = { TopBar() },
         bottomBar = { BottomBar() },
-        content = { FrontPageContent(navController = navController, viewModel, state.value) }
+        content = { FrontPageContent(navController = navController, viewModel) }
     )
 }
 
 @Composable
-fun FrontPageContent(navController: NavController, viewModel: FrontpageViewModel, states: States) {
+fun FrontPageContent(navController: NavController, viewModel: FrontpageViewModel) {
     var guessEnabled by remember { mutableStateOf(false) }
     var spinEnabled by remember { mutableStateOf(true) }
     var dropdownEnabled by remember { mutableStateOf(true) }
@@ -44,7 +41,7 @@ fun FrontPageContent(navController: NavController, viewModel: FrontpageViewModel
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        var categoryTitle = viewModel.uiState.value.chosenCategory
+        val categoryTitle = viewModel.uiState.value.chosenCategory
 
         viewModel.categoryTitleList()
 
@@ -52,7 +49,7 @@ fun FrontPageContent(navController: NavController, viewModel: FrontpageViewModel
 
         var expanded by remember { mutableStateOf(false) }
 
-        Row() {
+        Row {
             Text(text = "Category: $categoryTitle", fontSize = 25.sp)
             Box(contentAlignment = Alignment.Center) {}
             IconButton(onClick = {
@@ -115,7 +112,8 @@ fun FrontPageContent(navController: NavController, viewModel: FrontpageViewModel
             Text(text = lineWord, fontSize = 25.sp)
 
             Spacer(modifier = Modifier.height(20.dp))
-//TODO(Tjek for hvad der bliver inputtet. SKAL være mellem a-z.)
+            //TODO(Tjek for hvad der bliver inputtet. SKAL være mellem a-z.)
+            //TODO(bankrupt)
             OutlinedTextField(
                 value = character,
                 label = { Text(text = "Letter") },

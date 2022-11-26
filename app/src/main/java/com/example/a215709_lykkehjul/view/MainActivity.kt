@@ -1,4 +1,4 @@
-package com.example.a215709_lykkehjul.View
+package com.example.a215709_lykkehjul.view
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
