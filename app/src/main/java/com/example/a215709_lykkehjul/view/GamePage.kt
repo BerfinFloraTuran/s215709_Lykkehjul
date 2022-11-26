@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,7 +29,6 @@ fun FrontPage( viewModel: FrontpageViewModel){
     Scaffold(
         backgroundColor = Color(backgroundColor.toColorInt()),
         topBar = { TopBar() },
-        bottomBar = { BottomBar() },
         content = {  paddingValues -> FrontPageContent(viewModel, state, modifier = Modifier.padding(paddingValues)) }
     )
 }
@@ -51,8 +51,8 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: State<States>, modifi
 
         var expanded by remember { mutableStateOf(false) }
 
-        Row {
-            Text(text = "Category: $categoryTitle", fontSize = 25.sp)
+        Row(modifier = Modifier.padding(start = 30.dp)) {
+            Text(text = "Category: $categoryTitle", fontSize = 25.sp, fontStyle = FontStyle.Italic)
             Box(contentAlignment = Alignment.Center) {}
             IconButton(onClick = {
                 expanded = true
@@ -96,7 +96,7 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: State<States>, modifi
                 pointText = "Spin the wheel using the button below."
             }
 
-            Text(text = pointText)
+            Text(text = pointText, fontSize = 16.sp)
 
             val buttonColor = "#ffe3e6"
             Spacer(modifier = Modifier.height(15.dp))

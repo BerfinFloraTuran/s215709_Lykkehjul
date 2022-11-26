@@ -1,8 +1,13 @@
 package com.example.a215709_lykkehjul.view
 
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.core.graphics.toColorInt
 import androidx.navigation.compose.NavHost
@@ -31,7 +36,9 @@ val barColor = "#ffeef0"
 @Composable
 fun TopBar(){
     TopAppBar(backgroundColor = Color(barColor.toColorInt())) {
-        Text(text = "Wheel of Fortune", textAlign = TextAlign.Center)
+        Text(text = "Wheel of Fortune",
+        modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center, fontWeight = FontWeight.Bold
+        )
     }
 }
 
