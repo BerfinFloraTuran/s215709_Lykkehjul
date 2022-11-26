@@ -1,12 +1,11 @@
 package com.example.a215709_lykkehjul.View
 
-import android.widget.Toast
+import android.app.Activity
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -16,7 +15,6 @@ import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
 import com.example.a215709_lykkehjul.Model.States
 import com.example.a215709_lykkehjul.ViewModel.FrontpageViewModel
-import kotlinx.coroutines.flow.collect
 
 @Composable
 fun FrontPage(navController: NavController, viewModel: FrontpageViewModel){
@@ -31,12 +29,7 @@ fun FrontPage(navController: NavController, viewModel: FrontpageViewModel){
     )
 }
 
-
-//TODO(Sikre, at spillet slutter ved 0 liv.)
-
 //TODO(Sikre, at man kan vælge en category og der herefter bliver trukket et random ord.)
-
-
 
 @Composable
 fun FrontPageContent(navController: NavController, viewModel: FrontpageViewModel, states: States) {
@@ -78,7 +71,7 @@ fun FrontPageContent(navController: NavController, viewModel: FrontpageViewModel
             Text(text = lineWord, fontSize = 25.sp)
 
             Spacer(modifier = Modifier.height(20.dp))
-
+//TODO(Tjek for hvad der bliver inputtet. SKAL være mellem a-z.)
             OutlinedTextField(
                 value = character,
                 label = { Text(text = "Letter") },
@@ -90,10 +83,14 @@ fun FrontPageContent(navController: NavController, viewModel: FrontpageViewModel
 
             Spacer(modifier = Modifier.height(15.dp))
 
+
             Button(onClick = {
                 viewModel.updateWordSoFar(character)
+                viewModel.checkLost()
+                viewModel.checkWin()
                 spinEnabled = true
                 guessEnabled = false
+                character = ""
             }, enabled = guessEnabled, colors = ButtonDefaults.buttonColors(backgroundColor = Color(buttonColor.toColorInt()))) {
                 Text(text = "Guess")
             }
@@ -120,5 +117,49 @@ fun FrontPageContent(navController: NavController, viewModel: FrontpageViewModel
         }
         Text(text = guessedList, fontSize = 18.sp)
 
+        val activity = (LocalContext.current as? Activity)
+
+        val lostDialogState = remember{mutableStateOf(viewModel.uiState.value.gameLost)}
+        val wonDialogState = remember{mutableStateOf(viewModel.uiState.value.gameWon)}
+        var textToShow = ""
+        var titleText = ""
+
+        if (viewModel.uiState.value.gameLost || viewModel.uiState.value.gameWon) {
+           if (viewModel.uiState.value.gameLost){
+               textToShow = "You have used all of your lives and lost the game." +
+                       " Please restart or exit the game."
+               titleText = "You lost."
+           }
+            if(viewModel.uiState.value.gameWon){
+               textToShow = "You guessed the word and won the game!" +
+                       " Please restart or exit the game. "
+                titleText = "You won!"
+           }
+            AlertDialog(
+                onDismissRequest = {  },
+                title = { Text(text = titleText)},
+                text = { Text(text = textToShow)},
+                confirmButton = {
+                    Button(onClick = {
+                        viewModel.resetStates()
+                        lostDialogState.value = false
+                        wonDialogState.value = false
+                        character = ""
+                    }) {
+                        Text(text = "Restart")
+                    }
+                                },
+                dismissButton = {
+                    Button(onClick = {
+                        activity?.finish()
+                        wonDialogState.value = false
+                        wonDialogState.value = false
+                        character = ""
+                    }) {
+                        Text(text = "Exit")
+                    }
+                }
+            )
+        }
     }
 }

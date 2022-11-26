@@ -11,6 +11,31 @@ class FrontpageViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(States())
     val uiState = _uiState.asStateFlow()
 
+    fun resetStates(){
+        val emptyString = ""
+        val emptyList = mutableListOf<Char>()
+
+        _uiState.update { it.copy(emptyString, emptyList,5,0,0, emptyList,false,false ) }
+    }
+
+    fun checkLost(){
+        if (uiState.value.amountOfLives == 0){
+            _uiState.update { it.copy(gameLost = true) }
+        }
+    }
+
+    fun checkWin(){
+        var guessedCorrectly = false
+        for (i in 0 until uiState.value.wordDrawn.length){
+           if (!uiState.value.wordDrawn[i].equals(" ") && uiState.value.wordSoFar[i].equals(uiState.value.wordDrawn[i])){
+               guessedCorrectly = true
+           }
+            if (!uiState.value.wordDrawn[i].equals(" ") && !uiState.value.wordSoFar[i].equals(uiState.value.wordDrawn[i])){
+                guessedCorrectly = false
+            }
+        }
+        _uiState.update { it.copy(gameWon = guessedCorrectly) }
+    }
 
     fun spinTheWheel(){
         val listOfPoint = listOf(1000,900,800,700,600,500,400,300,200,100,-1)

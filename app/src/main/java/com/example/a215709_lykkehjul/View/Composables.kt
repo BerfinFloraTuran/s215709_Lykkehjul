@@ -1,14 +1,11 @@
 package com.example.a215709_lykkehjul.View
 
-import android.text.Layout.Alignment
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.*
+import androidx.compose.material.BottomAppBar
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,12 +17,13 @@ fun NavController(){
 
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = Screen.FrontPageScreen.route) {
-        composable(route = Screen.FrontPageScreen.route) {
+    NavHost(navController = navController, startDestination = Screen.GamePage.route) {
+        composable(route = Screen.GamePage.route) {
             FrontPage(navController = navController, viewModel = FrontpageViewModel())
         }
     }
 }
+
 val barColor = "#ffeef0"
 
 @Composable
