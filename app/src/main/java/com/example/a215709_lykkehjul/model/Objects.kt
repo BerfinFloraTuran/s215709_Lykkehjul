@@ -22,6 +22,10 @@ data class States(
     var chosenCategory: String = "Animals",
     var chosenWord: String = "",
     var visibility: Float = 0f,
-    var correctlyGuessedLetters: MutableList<Char> = mutableListOf()
+    var errorMessageVisibility: Float = 0f,
+    var correctlyGuessedLetters: MutableList<Char> = mutableListOf(),
+    var validInput: Boolean = false,
+    var guessEnabled: Boolean = false,
+    var spinEnabled: Boolean = true
 
 )

@@ -2,10 +2,13 @@ package com.example.a215709_lykkehjul.view
 
 import android.app.Activity
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -15,7 +18,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
-import androidx.navigation.NavController
 import com.example.a215709_lykkehjul.model.States
 import com.example.a215709_lykkehjul.viewModel.FrontpageViewModel
 
@@ -33,13 +35,11 @@ fun FrontPage( viewModel: FrontpageViewModel){
 
 @Composable
 fun FrontPageContent(viewModel: FrontpageViewModel, state: State<States>, modifier: Modifier) {
-    var guessEnabled by remember { mutableStateOf(false) }
-    var spinEnabled by remember { mutableStateOf(true) }
+    var guessEnabled by remember { mutableStateOf(state.value.guessEnabled) }
+    var spinEnabled by remember { mutableStateOf(state.value.spinEnabled) }
     var dropdownEnabled by remember { mutableStateOf(true) }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()) {
-
-        var character by remember { mutableStateOf("") }
 
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -64,7 +64,7 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: State<States>, modifi
                 )
             }
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                categoryList.forEachIndexed{itemIndex, itemValue ->
+                categoryList.forEachIndexed { itemIndex, itemValue ->
                     DropdownMenuItem(onClick = {
                         expanded = false
                         state.value.chosenCategory = itemValue
@@ -82,7 +82,10 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: State<States>, modifi
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Column(modifier = Modifier.alpha(state.value.visibility),horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            modifier = Modifier.alpha(state.value.visibility),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
             val pointText = state.value.tempBalance
             Text(text = "$pointText")
@@ -92,10 +95,8 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: State<States>, modifi
             Button(
                 onClick = {
                     viewModel.spinTheWheel()
-                    guessEnabled = true
-                    spinEnabled = false
                 },
-                enabled = spinEnabled,
+                enabled = state.value.spinEnabled,
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(buttonColor.toColorInt()))
             ) {
                 Text(text = "Spin the wheel")
@@ -112,35 +113,35 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: State<States>, modifi
 
             //val displayText = viewModel.uiState.value.wordSoFar
             Text(text = lineWord, fontSize = 25.sp)
+            var character by remember { mutableStateOf("") }
 
             Spacer(modifier = Modifier.height(20.dp))
-            //TODO(Tjek for hvad der bliver inputtet. SKAL være mellem a-z.)
             //TODO(bankrupt)
             OutlinedTextField(
                 value = character,
-                label = { Text(text = "Letter") },
+                label = { Text(text = "Letter", textAlign = TextAlign.Center) },
                 modifier = Modifier
-                    .width(90.dp),
-                onValueChange = { character = it },
-                enabled = guessEnabled
+                    .width(130.dp),
+                onValueChange = {
+                    character = it
+                },
+                enabled = state.value.guessEnabled,
+                singleLine = true
             )
+            Row(modifier = Modifier.alpha(state.value.errorMessageVisibility)) {
+                Text(text = "Please input one letter", color = Color.Red)
+            }
 
-            Spacer(modifier = Modifier.height(15.dp))
-
+            Spacer(modifier = Modifier.height(10.dp))
 
             Button(
                 onClick = {
-
-
-
-                    viewModel.updateWordSoFar(character)
-                    viewModel.checkLost()
-                    viewModel.checkWin()
-                    spinEnabled = true
-                    guessEnabled = false
-                    character = ""
+                        viewModel.updateWordSoFar(character)
+                        viewModel.checkLost()
+                        viewModel.checkWin()
+                        character = ""
                 },
-                enabled = guessEnabled,
+                enabled = state.value.guessEnabled,
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(buttonColor.toColorInt()))
             ) {
                 Text(text = "Guess")
