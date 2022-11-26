@@ -97,33 +97,46 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
         _uiState.update { it.copy(tempBalance = newBalance) }
     }
 
-    fun updateWordSoFar(char: String){
+    fun updateWordSoFar(char: String) {
         val character = char.toUpperCase()
         val newList = mutableListOf<Char>()
         var numOfLives = uiState.value.amountOfLives
-        val newNumOfLives : Int
+        val newNumOfLives: Int
         val tempBalance = uiState.value.tempBalance
         var balance = uiState.value.balance
         val guessedLettersList = uiState.value.guessedLetters
         val correctlyGuessedLetters = uiState.value.correctlyGuessedLetters
         var numOfLetters = 0
 
-        for (i in 0 until uiState.value.wordDrawn.length){
-            newList.add(i,uiState.value.wordSoFar[i])
-           if (uiState.value.wordDrawn[i].equals(character.single())){
-               newList.set(i,character.single())
-               numOfLetters = numOfLetters+1
+        if (!guessedLettersList.contains(char.single())) {
 
-               correctlyGuessedLetters.add(character.single())
-           }
+            for (i in 0 until uiState.value.wordDrawn.length) {
+                newList.add(i, uiState.value.wordSoFar[i])
+                if (uiState.value.wordDrawn[i].equals(character.single())) {
+                    newList.set(i, character.single())
+                    numOfLetters = numOfLetters + 1
+
+                    correctlyGuessedLetters.add(character.single())
+                }
+            }
+            balance += tempBalance * numOfLetters
+            if (!uiState.value.wordDrawn.contains(character)) {
+                newNumOfLives = numOfLives - 1
+                numOfLives = newNumOfLives
+            }
+            guessedLettersList.add(char.single())
+            _uiState.update {
+                it.copy(
+                    wordSoFar = newList,
+                    amountOfLives = numOfLives,
+                    balance = balance,
+                    tempBalance = 0,
+                    guessedLetters = guessedLettersList
+                )
+            }
+        } else {
+            return
         }
-        balance += tempBalance*numOfLetters
-        if (!uiState.value.wordDrawn.contains(character)){
-            newNumOfLives = numOfLives-1
-            numOfLives = newNumOfLives
-        }
-        guessedLettersList.add(char.single())
-        _uiState.update { it.copy(wordSoFar = newList, amountOfLives = numOfLives, balance = balance, tempBalance = 0, guessedLetters = guessedLettersList) }
     }
     private fun updateWordDrawn(word : String){
        var drawWord = word.toUpperCase()
