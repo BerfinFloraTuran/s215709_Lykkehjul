@@ -44,7 +44,7 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
             wordSoFar = emptyList,
             amountOfLives = 5,
             balance = 0,
-            tempBalance = 0,
+            tempBalance = -1,
             guessedLetters = emptyList,
             gameLost = false,
             gameWon = false,
@@ -106,13 +106,14 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
         val listOfPoint = listOf(1000,900,800,700,600,500,400,300,200,100,-1)
         val randomIndex = Random.nextInt(listOfPoint.size)
         val randomValue = listOfPoint[randomIndex]
-        var newBalance = 0
+
         if (randomValue == -1){
-            println("lol")
+            _uiState.update { it.copy(balance = 0, isBankrupt = true, tempBalance = 0) }
+            return
         } else {
-            newBalance = randomValue
+            var newBalance = randomValue
+            _uiState.update { it.copy(tempBalance = newBalance, guessEnabled = true, spinEnabled = false) }
         }
-        _uiState.update { it.copy(tempBalance = newBalance, guessEnabled = true, spinEnabled = false) }
     }
 
     fun updateWordSoFar(char: String) {
@@ -150,7 +151,7 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
                         wordSoFar = newList,
                         amountOfLives = numOfLives,
                         balance = balance,
-                        tempBalance = 0,
+                        tempBalance = -1,
                         guessedLetters = guessedLettersList,
                         errorMessageVisibility = 0f,
                         validInput = true,

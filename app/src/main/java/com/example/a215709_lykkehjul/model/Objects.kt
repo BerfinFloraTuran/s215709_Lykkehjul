@@ -14,7 +14,7 @@ data class States(
     var wordSoFar: MutableList<Char> = mutableListOf<Char>(),
     var amountOfLives: Int = 5,
     var balance: Int = 0,
-    var tempBalance: Int = 0,
+    var tempBalance: Int = -1,
     var guessedLetters: MutableList<Char> = mutableListOf(),
     var gameLost: Boolean = false,
     var gameWon: Boolean = false,
@@ -26,6 +26,7 @@ data class States(
     var correctlyGuessedLetters: MutableList<Char> = mutableListOf(),
     var validInput: Boolean = false,
     var guessEnabled: Boolean = false,
-    var spinEnabled: Boolean = true
+    var spinEnabled: Boolean = true,
+    var isBankrupt: Boolean = false
 
 )

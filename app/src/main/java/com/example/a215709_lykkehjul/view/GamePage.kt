@@ -87,8 +87,16 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: State<States>, modifi
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            val pointText = state.value.tempBalance
-            Text(text = "$pointText")
+            val point = state.value.tempBalance
+            var pointText = "$point"
+            if (point == 0){
+                pointText = "BANKRUPT. Try again."
+            }
+            if (point == -1){
+                pointText = "Spin the wheel using the button below."
+            }
+
+            Text(text = pointText)
 
             val buttonColor = "#ffe3e6"
             Spacer(modifier = Modifier.height(15.dp))
@@ -111,12 +119,11 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: State<States>, modifi
                 lineWord = lineWord + state.value.wordSoFar[i] + " "
             }
 
-            //val displayText = viewModel.uiState.value.wordSoFar
             Text(text = lineWord, fontSize = 25.sp)
             var character by remember { mutableStateOf("") }
 
             Spacer(modifier = Modifier.height(20.dp))
-            //TODO(bankrupt)
+
             OutlinedTextField(
                 value = character,
                 label = { Text(text = "Letter", textAlign = TextAlign.Center) },
