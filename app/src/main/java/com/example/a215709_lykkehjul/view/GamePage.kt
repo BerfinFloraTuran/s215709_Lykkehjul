@@ -11,27 +11,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
+import com.example.a215709_lykkehjul.model.States
 import com.example.a215709_lykkehjul.viewModel.FrontpageViewModel
 
 @Composable
-fun FrontPage(navController: NavController, viewModel: FrontpageViewModel){
+fun FrontPage( viewModel: FrontpageViewModel){
     val backgroundColor = "#fff6f7"
+    val state = viewModel.uiState.collectAsState()
     Scaffold(
         backgroundColor = Color(backgroundColor.toColorInt()),
         topBar = { TopBar() },
         bottomBar = { BottomBar() },
-        content = { FrontPageContent(navController = navController, viewModel) }
+        content = {  paddingValues -> FrontPageContent(viewModel, state, modifier = Modifier.padding(paddingValues)) }
     )
 }
 
 @Composable
-fun FrontPageContent(navController: NavController, viewModel: FrontpageViewModel) {
+fun FrontPageContent(viewModel: FrontpageViewModel, state: State<States>, modifier: Modifier) {
     var guessEnabled by remember { mutableStateOf(false) }
     var spinEnabled by remember { mutableStateOf(true) }
     var dropdownEnabled by remember { mutableStateOf(true) }
@@ -42,11 +43,11 @@ fun FrontPageContent(navController: NavController, viewModel: FrontpageViewModel
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        val categoryTitle = viewModel.uiState.value.chosenCategory
+        val categoryTitle = state.value.chosenCategory
 
         viewModel.categoryTitleList()
 
-        val categoryList = viewModel.uiState.value.titleList
+        val categoryList = state.value.titleList
 
         var expanded by remember { mutableStateOf(false) }
 
@@ -66,9 +67,9 @@ fun FrontPageContent(navController: NavController, viewModel: FrontpageViewModel
                 categoryList.forEachIndexed{itemIndex, itemValue ->
                     DropdownMenuItem(onClick = {
                         expanded = false
-                        viewModel.uiState.value.chosenCategory = itemValue
+                        state.value.chosenCategory = itemValue
                         dropdownEnabled = false
-                        viewModel.uiState.value.visibility = 100f
+                        state.value.visibility = 100f
                         viewModel.randomWord(itemValue)
                         viewModel.resetGuessedLetters()
                     }, enabled = itemIndex != -1)
@@ -81,9 +82,9 @@ fun FrontPageContent(navController: NavController, viewModel: FrontpageViewModel
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Column(modifier = Modifier.alpha(viewModel.uiState.value.visibility),horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(modifier = Modifier.alpha(state.value.visibility),horizontalAlignment = Alignment.CenterHorizontally) {
 
-            val pointText = viewModel.uiState.value.tempBalance
+            val pointText = state.value.tempBalance
             Text(text = "$pointText")
 
             val buttonColor = "#ffe3e6"
@@ -105,8 +106,8 @@ fun FrontPageContent(navController: NavController, viewModel: FrontpageViewModel
 
             var lineWord = ""
 
-            for (i in 0 until viewModel.uiState.value.wordSoFar.size) {
-                lineWord = lineWord + viewModel.uiState.value.wordSoFar[i] + " "
+            for (i in 0 until state.value.wordSoFar.size) {
+                lineWord = lineWord + state.value.wordSoFar[i] + " "
             }
 
             //val displayText = viewModel.uiState.value.wordSoFar
@@ -129,6 +130,9 @@ fun FrontPageContent(navController: NavController, viewModel: FrontpageViewModel
 
             Button(
                 onClick = {
+
+
+
                     viewModel.updateWordSoFar(character)
                     viewModel.checkLost()
                     viewModel.checkWin()
@@ -144,10 +148,10 @@ fun FrontPageContent(navController: NavController, viewModel: FrontpageViewModel
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            val livesText = viewModel.uiState.value.amountOfLives
+            val livesText = state.value.amountOfLives
             Text(text = "$livesText lives left", fontSize = 16.sp)
 
-            val balanceText = viewModel.uiState.value.balance
+            val balanceText = state.value.balance
             Text(text = "Balance: $balanceText", fontSize = 16.sp)
 
             Spacer(modifier = Modifier.height(70.dp))
@@ -159,25 +163,25 @@ fun FrontPageContent(navController: NavController, viewModel: FrontpageViewModel
 
             var guessedList = ""
 
-            for (i in 0 until viewModel.uiState.value.guessedLetters.size) {
-                guessedList = guessedList + viewModel.uiState.value.guessedLetters[i] + "  "
+            for (i in 0 until state.value.guessedLetters.size) {
+                guessedList = guessedList + state.value.guessedLetters[i] + "  "
             }
             Text(text = guessedList, fontSize = 18.sp)
 
             val activity = (LocalContext.current as? Activity)
 
-            val lostDialogState = remember { mutableStateOf(viewModel.uiState.value.gameLost) }
-            val wonDialogState = remember { mutableStateOf(viewModel.uiState.value.gameWon) }
+            val lostDialogState = remember { mutableStateOf(state.value.gameLost) }
+            val wonDialogState = remember { mutableStateOf(state.value.gameWon) }
             var textToShow = ""
             var titleText = ""
 
-            if (viewModel.uiState.value.gameLost || viewModel.uiState.value.gameWon) {
-                if (viewModel.uiState.value.gameLost) {
+            if (state.value.gameLost || state.value.gameWon) {
+                if (state.value.gameLost) {
                     textToShow = "You have used all of your lives and lost the game." +
                             " Please restart or exit the game."
                     titleText = "You lost."
                 }
-                if (viewModel.uiState.value.gameWon) {
+                if (state.value.gameWon) {
                     textToShow = "You guessed the word and won the game!" +
                             " Please restart or exit the game. "
                     titleText = "You won!"

@@ -21,7 +21,7 @@ fun NavController(){
 
     NavHost(navController = navController, startDestination = Screen.GamePage.route) {
         composable(route = Screen.GamePage.route) {
-            FrontPage(navController = navController, viewModel = frontpageViewModel)
+            FrontPage(viewModel = frontpageViewModel)
         }
     }
 }
