@@ -16,23 +16,24 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
+import androidx.navigation.NavController
 import com.example.a215709_lykkehjul.model.States
-import com.example.a215709_lykkehjul.viewModel.FrontpageViewModel
+import com.example.a215709_lykkehjul.viewModel.GameViewModel
 
 @Composable
-fun FrontPage( viewModel: FrontpageViewModel){
+fun FrontPage(viewModel: GameViewModel, navController : NavController){
     val backgroundColor = "#fff6f7"
     val state = viewModel.state.value
 
     Scaffold(
         backgroundColor = Color(backgroundColor.toColorInt()),
         topBar = { TopBar() },
-        content = {  paddingValues -> FrontPageContent(viewModel, state, modifier = Modifier.padding(paddingValues)) }
+        content = {  paddingValues -> FrontPageContent(viewModel, state, modifier = Modifier.padding(paddingValues), navController) }
     )
 }
 
 @Composable
-fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Modifier) {
+fun FrontPageContent(viewModel: GameViewModel, state: States, modifier: Modifier, navController: NavController) {
     var dropdownEnabled by remember { mutableStateOf(true) }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()) {

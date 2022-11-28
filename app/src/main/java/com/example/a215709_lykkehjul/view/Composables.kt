@@ -1,7 +1,5 @@
 package com.example.a215709_lykkehjul.view
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -14,7 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.a215709_lykkehjul.data.Controller
-import com.example.a215709_lykkehjul.viewModel.FrontpageViewModel
+import com.example.a215709_lykkehjul.viewModel.GameViewModel
 
 @Composable
 fun NavController(){
@@ -22,11 +20,14 @@ fun NavController(){
     val navController = rememberNavController()
     var controller = Controller()
     controller.initializeData()
-    val frontpageViewModel = FrontpageViewModel(controller.categoryData)
+    val gameViewModel = GameViewModel(controller.categoryData)
 
-    NavHost(navController = navController, startDestination = Screen.GamePage.route) {
+    NavHost(navController = navController, startDestination = Screen.StartGame.route) {
         composable(route = Screen.GamePage.route) {
-            FrontPage(viewModel = frontpageViewModel)
+            FrontPage(viewModel = gameViewModel, navController)
+        }
+        composable(route = Screen.StartGame.route){
+            StartPage(viewModel = gameViewModel, navController)
         }
     }
 }

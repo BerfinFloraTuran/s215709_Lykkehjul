@@ -7,12 +7,9 @@ import com.example.a215709_lykkehjul.data.CategoryData
 import com.example.a215709_lykkehjul.model.Category
 import com.example.a215709_lykkehjul.model.States
 import com.example.a215709_lykkehjul.model.Word
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlin.random.Random
 
-class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
+class GameViewModel(private var categoryData: CategoryData) : ViewModel() {
     private val _uiState = mutableStateOf(States())
     val state: State<States> = _uiState
 
