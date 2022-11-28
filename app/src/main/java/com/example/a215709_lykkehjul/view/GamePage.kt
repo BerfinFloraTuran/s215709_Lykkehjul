@@ -2,13 +2,10 @@ package com.example.a215709_lykkehjul.view
 
 import android.app.Activity
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -25,7 +22,8 @@ import com.example.a215709_lykkehjul.viewModel.FrontpageViewModel
 @Composable
 fun FrontPage( viewModel: FrontpageViewModel){
     val backgroundColor = "#fff6f7"
-    val state = viewModel.uiState.collectAsState()
+    val state = viewModel.state.value
+
     Scaffold(
         backgroundColor = Color(backgroundColor.toColorInt()),
         topBar = { TopBar() },
@@ -34,20 +32,18 @@ fun FrontPage( viewModel: FrontpageViewModel){
 }
 
 @Composable
-fun FrontPageContent(viewModel: FrontpageViewModel, state: State<States>, modifier: Modifier) {
-    var guessEnabled by remember { mutableStateOf(state.value.guessEnabled) }
-    var spinEnabled by remember { mutableStateOf(state.value.spinEnabled) }
+fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Modifier) {
     var dropdownEnabled by remember { mutableStateOf(true) }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()) {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        val categoryTitle = state.value.chosenCategory
+        val categoryTitle = state.chosenCategory
 
         viewModel.categoryTitleList()
 
-        val categoryList = state.value.titleList
+        val categoryList = state.titleList
 
         var expanded by remember { mutableStateOf(false) }
 
@@ -67,9 +63,9 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: State<States>, modifi
                 categoryList.forEachIndexed { itemIndex, itemValue ->
                     DropdownMenuItem(onClick = {
                         expanded = false
-                        state.value.chosenCategory = itemValue
+                        state.chosenCategory = itemValue
                         dropdownEnabled = false
-                        state.value.visibility = 100f
+                        state.visibility = 100f
                         viewModel.randomWord(itemValue)
                         viewModel.resetGuessedLetters()
                     }, enabled = itemIndex != -1)
@@ -83,11 +79,11 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: State<States>, modifi
         Spacer(modifier = Modifier.height(20.dp))
 
         Column(
-            modifier = Modifier.alpha(state.value.visibility),
+            modifier = Modifier.alpha(state.visibility),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            val point = state.value.tempBalance
+            val point = state.tempBalance
             var pointText = "$point"
             if (point == 0){
                 pointText = "BANKRUPT. Try again."
@@ -104,7 +100,7 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: State<States>, modifi
                 onClick = {
                     viewModel.spinTheWheel()
                 },
-                enabled = state.value.spinEnabled,
+                enabled = state.spinEnabled,
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(buttonColor.toColorInt()))
             ) {
                 Text(text = "Spin the wheel")
@@ -115,8 +111,8 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: State<States>, modifi
 
             var lineWord = ""
 
-            for (i in 0 until state.value.wordSoFar.size) {
-                lineWord = lineWord + state.value.wordSoFar[i] + " "
+            for (i in 0 until state.wordSoFar.size) {
+                lineWord = lineWord + state.wordSoFar[i] + " "
             }
 
             Text(text = lineWord, fontSize = 25.sp)
@@ -132,10 +128,10 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: State<States>, modifi
                 onValueChange = {
                     character = it
                 },
-                enabled = state.value.guessEnabled,
+                enabled = state.guessEnabled,
                 singleLine = true
             )
-            Row(modifier = Modifier.alpha(state.value.errorMessageVisibility)) {
+            Row(modifier = Modifier.alpha(state.errorMessageVisibility)) {
                 Text(text = "Please input one letter", color = Color.Red)
             }
 
@@ -148,7 +144,7 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: State<States>, modifi
                         viewModel.checkWin()
                         character = ""
                 },
-                enabled = state.value.guessEnabled,
+                enabled = state.guessEnabled,
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(buttonColor.toColorInt()))
             ) {
                 Text(text = "Guess")
@@ -156,10 +152,10 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: State<States>, modifi
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            val livesText = state.value.amountOfLives
+            val livesText = state.amountOfLives
             Text(text = "$livesText lives left", fontSize = 16.sp)
 
-            val balanceText = state.value.balance
+            val balanceText = state.balance
             Text(text = "Balance: $balanceText", fontSize = 16.sp)
 
             Spacer(modifier = Modifier.height(70.dp))
@@ -171,25 +167,25 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: State<States>, modifi
 
             var guessedList = ""
 
-            for (i in 0 until state.value.guessedLetters.size) {
-                guessedList = guessedList + state.value.guessedLetters[i] + "  "
+            for (i in 0 until state.guessedLetters.size) {
+                guessedList = guessedList + state.guessedLetters[i] + "  "
             }
             Text(text = guessedList, fontSize = 18.sp)
 
             val activity = (LocalContext.current as? Activity)
 
-            val lostDialogState = remember { mutableStateOf(state.value.gameLost) }
-            val wonDialogState = remember { mutableStateOf(state.value.gameWon) }
+            val lostDialogState = remember { mutableStateOf(state.gameLost) }
+            val wonDialogState = remember { mutableStateOf(state.gameWon) }
             var textToShow = ""
             var titleText = ""
 
-            if (state.value.gameLost || state.value.gameWon) {
-                if (state.value.gameLost) {
+            if (state.gameLost || state.gameWon) {
+                if (state.gameLost) {
                     textToShow = "You have used all of your lives and lost the game." +
                             " Please restart or exit the game."
                     titleText = "You lost."
                 }
-                if (state.value.gameWon) {
+                if (state.gameWon) {
                     textToShow = "You guessed the word and won the game!" +
                             " Please restart or exit the game. "
                     titleText = "You won!"

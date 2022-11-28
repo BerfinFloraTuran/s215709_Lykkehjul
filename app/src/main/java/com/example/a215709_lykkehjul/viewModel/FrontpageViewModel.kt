@@ -1,5 +1,7 @@
 package com.example.a215709_lykkehjul.viewModel
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.a215709_lykkehjul.data.CategoryData
 import com.example.a215709_lykkehjul.model.Category
@@ -11,8 +13,9 @@ import kotlinx.coroutines.flow.update
 import kotlin.random.Random
 
 class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
-    private val _uiState = MutableStateFlow(States())
-    val uiState = _uiState.asStateFlow()
+    private val _uiState = mutableStateOf(States())
+    val state: State<States> = _uiState
+
 
     fun randomWord(title : String){
         var wordList = mutableListOf<Word>()
@@ -23,23 +26,22 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
         val randomInt = Random.nextInt(wordList.size)
         val randomWord = wordList[randomInt].word
 
-        _uiState.update { it.copy(chosenWord = randomWord) }
-        updateWordDrawn(uiState.value.chosenWord)
+        _uiState.value.copy(chosenWord = randomWord)
+        updateWordDrawn(state.value.chosenWord)
     }
-
 
     fun categoryTitleList(){
         val titleList = mutableListOf<String>()
         for (category : Category in categoryData.categories) {
             titleList.add(category.title)
         }
-        _uiState.update { it.copy(titleList=titleList) }
+        _uiState.value.copy(titleList=titleList)
     }
 
     fun resetStates(){
         val emptyList = mutableListOf<Char>()
 
-        _uiState.update { it.copy(
+        _uiState.value.copy(
             wordDrawn = "",
             wordSoFar = emptyList,
             amountOfLives = 5,
@@ -55,28 +57,28 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
             validInput = false,
             guessEnabled = false,
             spinEnabled = true
-        ) }
+        )
     }
 
     fun resetGuessedLetters(){
         val emptyList = mutableListOf<Char>()
 
-        _uiState.update { it.copy(guessedLetters = emptyList) }
+        _uiState.value.copy(guessedLetters = emptyList)
     }
 
 
     fun checkLost(){
-        if (uiState.value.amountOfLives == 0){
-            _uiState.update { it.copy(gameLost = true) }
+        if (state.value.amountOfLives == 0){
+            _uiState.value.copy(gameLost = true)
         }
     }
 
     fun checkInput(character : String){
             if (character.length==1 && character.single() in 'A'..'Z') {
-                _uiState.update { it.copy(errorMessageVisibility = 0f, validInput = true) }
+                _uiState.value.copy(errorMessageVisibility = 0f, validInput = true)
             }
         else {
-            _uiState.update { it.copy(errorMessageVisibility = 100f, validInput = false) }
+            _uiState.value.copy(errorMessageVisibility = 100f, validInput = false)
         }
     }
 
@@ -84,14 +86,14 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
         var guessedCorrectly = false
         var correctlyGuessed = 0
         var lettersToGuess = 0
-        for (i in 0 until uiState.value.wordDrawn.length){
-            if(!uiState.value.wordDrawn[i].equals(" ")){
+        for (i in 0 until state.value.wordDrawn.length){
+            if(!state.value.wordDrawn[i].equals(" ")){
                 lettersToGuess = lettersToGuess + 1
             }
-           if (!uiState.value.wordDrawn[i].equals(" ") && uiState.value.wordSoFar[i].equals(uiState.value.wordDrawn[i])){
+           if (!state.value.wordDrawn[i].equals(" ") && state.value.wordSoFar[i].equals(state.value.wordDrawn[i])){
                correctlyGuessed = correctlyGuessed + 1
            }
-            if (!uiState.value.wordDrawn[i].equals(" ") && !uiState.value.wordSoFar[i].equals(uiState.value.wordDrawn[i])){
+            if (!state.value.wordDrawn[i].equals(" ") && !state.value.wordSoFar[i].equals(state.value.wordDrawn[i])){
                 guessedCorrectly = false
             }
         }
@@ -99,7 +101,7 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
             guessedCorrectly = true
         }
 
-        _uiState.update { it.copy(gameWon = guessedCorrectly) }
+        _uiState.value.copy(gameWon = guessedCorrectly)
     }
 
     fun spinTheWheel(){
@@ -108,32 +110,32 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
         val randomValue = listOfPoint[randomIndex]
 
         if (randomValue == -1){
-            _uiState.update { it.copy(balance = 0, isBankrupt = true, tempBalance = 0) }
+            _uiState.value.copy(balance = 0, isBankrupt = true, tempBalance = 0)
             return
         } else {
             var newBalance = randomValue
-            _uiState.update { it.copy(tempBalance = newBalance, guessEnabled = true, spinEnabled = false) }
+            _uiState.value.copy(tempBalance = newBalance, guessEnabled = true, spinEnabled = false)
         }
     }
 
     fun updateWordSoFar(char: String) {
         val character = char.toUpperCase()
         val newList = mutableListOf<Char>()
-        var numOfLives = uiState.value.amountOfLives
+        var numOfLives = state.value.amountOfLives
         val newNumOfLives: Int
-        val tempBalance = uiState.value.tempBalance
-        var balance = uiState.value.balance
-        val guessedLettersList = uiState.value.guessedLetters
-        val correctlyGuessedLetters = uiState.value.correctlyGuessedLetters
+        val tempBalance = state.value.tempBalance
+        var balance = state.value.balance
+        val guessedLettersList = state.value.guessedLetters
+        val correctlyGuessedLetters = state.value.correctlyGuessedLetters
         var numOfLetters = 0
 
         checkInput(character)
-        if (uiState.value.validInput) {
+        if (state.value.validInput) {
             if (!guessedLettersList.contains(char.single())) {
 
-                for (i in 0 until uiState.value.wordDrawn.length) {
-                    newList.add(i, uiState.value.wordSoFar[i])
-                    if (uiState.value.wordDrawn[i].equals(character.single())) {
+                for (i in 0 until state.value.wordDrawn.length) {
+                    newList.add(i, state.value.wordSoFar[i])
+                    if (state.value.wordDrawn[i].equals(character.single())) {
                         newList.set(i, character.single())
                         numOfLetters = numOfLetters + 1
 
@@ -141,13 +143,12 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
                     }
                 }
                 balance += tempBalance * numOfLetters
-                if (!uiState.value.wordDrawn.contains(character)) {
+                if (!state.value.wordDrawn.contains(character)) {
                     newNumOfLives = numOfLives - 1
                     numOfLives = newNumOfLives
                 }
                 guessedLettersList.add(char.single())
-                _uiState.update {
-                    it.copy(
+                _uiState.value.copy(
                         wordSoFar = newList,
                         amountOfLives = numOfLives,
                         balance = balance,
@@ -163,17 +164,16 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
                 return
             }
         }
-    }
 
     private fun updateWordDrawn(word : String){
        var drawWord = word.toUpperCase()
-        uiState.value.wordDrawn = drawWord
-        for (char : Char in uiState.value.wordDrawn){
+        state.value.wordDrawn = drawWord
+        for (char : Char in state.value.wordDrawn){
             if (char == ' '){
-                uiState.value.wordSoFar.add('-')
+                state.value.wordSoFar.add('-')
             }
             else {
-                uiState.value.wordSoFar.add('_')
+                state.value.wordSoFar.add('_')
             }
         }
     }
