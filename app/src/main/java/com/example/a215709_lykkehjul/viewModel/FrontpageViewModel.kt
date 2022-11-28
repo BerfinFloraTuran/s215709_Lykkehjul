@@ -17,6 +17,7 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
     val state: State<States> = _uiState
 
 
+
     fun randomWord(title : String){
         var wordList = mutableListOf<Word>()
         for (category : Category in categoryData.categories){
@@ -26,7 +27,7 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
         val randomInt = Random.nextInt(wordList.size)
         val randomWord = wordList[randomInt].word
 
-        _uiState.value.copy(chosenWord = randomWord)
+        _uiState.value = _uiState.value.copy(chosenWord = randomWord)
         updateWordDrawn(state.value.chosenWord)
     }
 
@@ -35,13 +36,13 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
         for (category : Category in categoryData.categories) {
             titleList.add(category.title)
         }
-        _uiState.value.copy(titleList=titleList)
+        _uiState.value = _uiState.value.copy(titleList=titleList)
     }
 
     fun resetStates(){
         val emptyList = mutableListOf<Char>()
 
-        _uiState.value.copy(
+        _uiState.value = _uiState.value.copy(
             wordDrawn = "",
             wordSoFar = emptyList,
             amountOfLives = 5,
@@ -63,22 +64,22 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
     fun resetGuessedLetters(){
         val emptyList = mutableListOf<Char>()
 
-        _uiState.value.copy(guessedLetters = emptyList)
+        _uiState.value = _uiState.value.copy(guessedLetters = emptyList)
     }
 
 
     fun checkLost(){
         if (state.value.amountOfLives == 0){
-            _uiState.value.copy(gameLost = true)
+            _uiState.value = _uiState.value.copy(gameLost = true)
         }
     }
 
     fun checkInput(character : String){
             if (character.length==1 && character.single() in 'A'..'Z') {
-                _uiState.value.copy(errorMessageVisibility = 0f, validInput = true)
+                _uiState.value = _uiState.value.copy(errorMessageVisibility = 0f, validInput = true)
             }
         else {
-            _uiState.value.copy(errorMessageVisibility = 100f, validInput = false)
+                _uiState.value = _uiState.value.copy(errorMessageVisibility = 100f, validInput = false)
         }
     }
 
@@ -101,7 +102,7 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
             guessedCorrectly = true
         }
 
-        _uiState.value.copy(gameWon = guessedCorrectly)
+        _uiState.value = _uiState.value.copy(gameWon = guessedCorrectly)
     }
 
     fun spinTheWheel(){
@@ -110,11 +111,11 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
         val randomValue = listOfPoint[randomIndex]
 
         if (randomValue == -1){
-            _uiState.value.copy(balance = 0, isBankrupt = true, tempBalance = 0)
+            _uiState.value = _uiState.value.copy(balance = 0, isBankrupt = true, tempBalance = 0)
             return
         } else {
             var newBalance = randomValue
-            _uiState.value.copy(tempBalance = newBalance, guessEnabled = true, spinEnabled = false)
+            _uiState.value = _uiState.value.copy(tempBalance = newBalance, guessEnabled = true, spinEnabled = false)
         }
     }
 
@@ -148,7 +149,7 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
                     numOfLives = newNumOfLives
                 }
                 guessedLettersList.add(char.single())
-                _uiState.value.copy(
+                _uiState.value = _uiState.value.copy(
                         wordSoFar = newList,
                         amountOfLives = numOfLives,
                         balance = balance,
