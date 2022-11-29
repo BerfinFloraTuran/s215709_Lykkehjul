@@ -1,5 +1,7 @@
 package com.example.a215709_lykkehjul.viewModel
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -10,12 +12,12 @@ import com.example.a215709_lykkehjul.model.Word
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlin.properties.Delegates
 import kotlin.random.Random
 
 class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
     private val _uiState = mutableStateOf(States())
     val state: State<States> = _uiState
-
 
 
     fun randomWord(title : String){

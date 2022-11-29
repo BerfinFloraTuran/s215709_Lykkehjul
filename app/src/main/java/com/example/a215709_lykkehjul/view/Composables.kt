@@ -1,5 +1,7 @@
 package com.example.a215709_lykkehjul.view
 
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateSizeAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -12,7 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.Star
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -21,6 +23,7 @@ import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
@@ -49,7 +52,7 @@ fun NavController(){
 }
 
 
-val barColor = "#ffeef0"
+val barColor = "#FFCCB8"
 
 @Composable
 fun TopBar(navController: NavController, hasExit : Boolean, viewModel: FrontpageViewModel, state: States) {
@@ -63,6 +66,8 @@ fun TopBar(navController: NavController, hasExit : Boolean, viewModel: Frontpage
         alpha = 100f
         enabled = true
     }
+
+
 
     TopAppBar(
         backgroundColor = Color(barColor.toColorInt()),
@@ -83,7 +88,11 @@ fun TopBar(navController: NavController, hasExit : Boolean, viewModel: Frontpage
 
             Box(modifier = Modifier.alpha(alpha)) {
                 Row() {
-                    Box(Modifier.background(Color.White, shape = RoundedCornerShape(10.dp)).width(50.dp).height(30.dp), contentAlignment = Alignment.CenterEnd){
+                    Box(
+                        Modifier
+                            .background(Color.White, shape = RoundedCornerShape(10.dp))
+                            .width(50.dp)
+                            .height(30.dp), contentAlignment = Alignment.CenterEnd){
                         Row() {
                             Text(
                                 text = "$livesText",
@@ -101,7 +110,11 @@ fun TopBar(navController: NavController, hasExit : Boolean, viewModel: Frontpage
 
                     Spacer(Modifier.width(10.dp))
 
-                    Box(Modifier.background(Color.White, shape = RoundedCornerShape(10.dp)).width(80.dp).height(30.dp), contentAlignment = Alignment.CenterEnd){
+                    Box(
+                        Modifier
+                            .background(Color.White, shape = RoundedCornerShape(10.dp))
+                            .width(80.dp)
+                            .height(30.dp), contentAlignment = Alignment.CenterEnd){
                         Row() {
                             Text(
                                 text = "$balanceText",

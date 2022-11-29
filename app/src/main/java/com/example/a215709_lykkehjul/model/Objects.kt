@@ -28,5 +28,4 @@ data class States(
     var guessEnabled: Boolean = false,
     var spinEnabled: Boolean = true,
     var isBankrupt: Boolean = false
-
 )

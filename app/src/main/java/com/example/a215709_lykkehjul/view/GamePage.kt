@@ -1,7 +1,12 @@
 package com.example.a215709_lykkehjul.view
 
 import android.app.Activity
+import androidx.compose.animation.Animatable
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -9,9 +14,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,7 +29,8 @@ import com.example.a215709_lykkehjul.viewModel.FrontpageViewModel
 
 @Composable
 fun FrontPage( viewModel: FrontpageViewModel, navController : NavController){
-    val backgroundColor = "#fff6f7"
+    val backgroundColor = "#FEE9E1"
+
     val state = viewModel.state.value
 
     Scaffold(
@@ -49,7 +57,11 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
         var expanded by remember { mutableStateOf(false) }
 
         Row(modifier = Modifier.padding(start = 30.dp)) {
-            Text(text = "Category: $categoryTitle", fontSize = 25.sp, fontStyle = FontStyle.Italic)
+            Text(
+                text = "Category: $categoryTitle",
+                fontSize = 19.sp,
+                fontWeight = FontWeight.SemiBold
+            )
             Box(contentAlignment = Alignment.Center) {}
             IconButton(onClick = {
                 expanded = true
@@ -57,7 +69,7 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
                 Icon(
                     imageVector = Icons.Default.ArrowDropDown,
                     contentDescription = "",
-                    modifier = Modifier.padding(bottom = 10.dp)
+                    modifier = Modifier.padding(bottom = 20.dp)
                 )
             }
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
@@ -86,16 +98,16 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
 
             val point = state.tempBalance
             var pointText = "$point"
-            if (point == 0){
+            if (point == 0) {
                 pointText = "BANKRUPT. Try again."
             }
-            if (point == -1){
+            if (point == -1) {
                 pointText = "Spin the wheel using the button below."
             }
 
             Text(text = pointText, fontSize = 16.sp)
 
-            val buttonColor = "#ffe3e6"
+            val buttonColor = "#FFCCB8"
             Spacer(modifier = Modifier.height(15.dp))
             Button(
                 onClick = {
@@ -140,10 +152,10 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
 
             Button(
                 onClick = {
-                        viewModel.updateWordSoFar(character)
-                        viewModel.checkLost()
-                        viewModel.checkWin()
-                        character = ""
+                    viewModel.updateWordSoFar(character)
+                    viewModel.checkLost()
+                    viewModel.checkWin()
+                    character = ""
                 },
                 enabled = state.guessEnabled,
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(buttonColor.toColorInt()))
@@ -162,18 +174,33 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
 
  */
             Spacer(modifier = Modifier.height(70.dp))
+            Box(
+                modifier = Modifier
+                    .background(Color.White, shape = RoundedCornerShape(30.dp))
+                    .fillMaxWidth()
+                    .height(250.dp),
+                contentAlignment = Alignment.TopCenter
+            ) {
+                Column() {
+                    Text(
+                        text = "Guessed letters:",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium
+                    )
 
-            Divider(startIndent = 0.dp, thickness = 1.dp, color = Color.LightGray)
-            Spacer(modifier = Modifier.height(15.dp))
-            Text(text = "Guessed letters: ", textAlign = TextAlign.Center)
-            Spacer(modifier = Modifier.height(25.dp))
+                    Spacer(modifier = Modifier.height(25.dp))
 
-            var guessedList = ""
+                    var guessedList = ""
 
-            for (i in 0 until state.guessedLetters.size) {
-                guessedList = guessedList + state.guessedLetters[i] + "  "
+                    for (i in 0 until state.guessedLetters.size) {
+                        guessedList = guessedList + state.guessedLetters[i] + "  "
+                    }
+                    Text(text = guessedList, fontSize = 18.sp)
+                }
             }
-            Text(text = guessedList, fontSize = 18.sp)
+
+            // Divider(startIndent = 0.dp, thickness = 1.dp, color = Color.LightGray)
+
 
             val activity = (LocalContext.current as? Activity)
 
@@ -181,6 +208,7 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
             val wonDialogState = remember { mutableStateOf(state.gameWon) }
             var textToShow = ""
             var titleText = ""
+            val dialogCol = "#FFEBE3"
 
             if (state.gameLost || state.gameWon) {
                 if (state.gameLost) {
@@ -204,8 +232,9 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
                             wonDialogState.value = false
                             character = ""
                             dropdownEnabled = true
-                        }) {
-                            Text(text = "Restart")
+                        }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(buttonColor.toColorInt()))
+                        ) {
+                            Text(text = "New Game")
                         }
                     },
                     dismissButton = {
@@ -214,10 +243,11 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
                             wonDialogState.value = false
                             wonDialogState.value = false
                             character = ""
-                        }) {
+                        },colors = ButtonDefaults.buttonColors(backgroundColor = Color(buttonColor.toColorInt()))) {
                             Text(text = "Exit")
                         }
-                    }
+                    },
+                    backgroundColor = Color(dialogCol.toColorInt())
                 )
             }
         }
