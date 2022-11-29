@@ -14,6 +14,13 @@ class GameViewModel(private var categoryData: CategoryData) : ViewModel() {
     val state: State<States> = _uiState
 
 
+    fun spin(){
+        _uiState.value = _uiState.value.copy(isSpinning = true)
+    }
+
+    fun stopSpin(){
+        _uiState.value = _uiState.value.copy(isSpinning = false)
+    }
 
     fun randomWord(title : String){
         var wordList = mutableListOf<Word>()
@@ -24,8 +31,11 @@ class GameViewModel(private var categoryData: CategoryData) : ViewModel() {
         val randomInt = Random.nextInt(wordList.size)
         val randomWord = wordList[randomInt].word
 
-        _uiState.value = _uiState.value.copy(chosenWord = randomWord)
-        updateWordDrawn(state.value.chosenWord)
+        var word = randomWord.toUpperCase()
+
+        _uiState.value = _uiState.value.copy(chosenWord = word)
+        _uiState.value = _uiState.value.copy(wordDrawn = word)
+        updateWordDrawn()
     }
 
     fun categoryTitleList(){
@@ -49,12 +59,9 @@ class GameViewModel(private var categoryData: CategoryData) : ViewModel() {
             gameLost = false,
             gameWon = false,
             chosenWord = "",
-            visibility = 0f,
             errorMessageVisibility = 0f,
             correctlyGuessedLetters = emptyList,
-            validInput = false,
-            guessEnabled = false,
-            spinEnabled = true
+            validInput = false
         )
     }
 
@@ -66,7 +73,7 @@ class GameViewModel(private var categoryData: CategoryData) : ViewModel() {
 
 
     fun checkLost(){
-        if (state.value.amountOfLives == 0){
+        if (state.value.amountOfLives-1 == 0){
             _uiState.value = _uiState.value.copy(gameLost = true)
         }
     }
@@ -112,7 +119,9 @@ class GameViewModel(private var categoryData: CategoryData) : ViewModel() {
             return
         } else {
             var newBalance = randomValue
-            _uiState.value = _uiState.value.copy(tempBalance = newBalance, guessEnabled = true, spinEnabled = false)
+            _uiState.value = _uiState.value.copy(tempBalance = newBalance
+                //, guessEnabled = true, spinEnabled = false
+        )
         }
     }
 
@@ -153,9 +162,7 @@ class GameViewModel(private var categoryData: CategoryData) : ViewModel() {
                         tempBalance = -1,
                         guessedLetters = guessedLettersList,
                         errorMessageVisibility = 0f,
-                        validInput = true,
-                        spinEnabled = true,
-                        guessEnabled = false
+                        validInput = true
                     )
                 }
             } else {
@@ -163,17 +170,18 @@ class GameViewModel(private var categoryData: CategoryData) : ViewModel() {
             }
         }
 
-    private fun updateWordDrawn(word : String){
-       var drawWord = word.toUpperCase()
-        state.value.wordDrawn = drawWord
+    private fun updateWordDrawn(/*word : String*/){
+    var list = mutableListOf<Char>()
         for (char : Char in state.value.wordDrawn){
             if (char == ' '){
-                state.value.wordSoFar.add('-')
+                list.add('-')
             }
             else {
-                state.value.wordSoFar.add('_')
+                list.add('_')
             }
         }
+        _uiState.value = _uiState.value.copy(wordSoFar = list)
     }
+
 
 }
