@@ -29,8 +29,11 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
         val randomInt = Random.nextInt(wordList.size)
         val randomWord = wordList[randomInt].word
 
-        _uiState.value = _uiState.value.copy(chosenWord = randomWord)
-        updateWordDrawn(state.value.chosenWord)
+        val word = randomWord.toUpperCase()
+
+        _uiState.value = _uiState.value.copy(chosenWord = word)
+        _uiState.value = _uiState.value.copy(wordDrawn = word)
+        updateWordDrawn()
     }
 
     fun categoryTitleList(){
@@ -54,7 +57,7 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
             gameLost = false,
             gameWon = false,
             chosenWord = "",
-            visibility = 0f,
+            visibility = 100f,
             errorMessageVisibility = 0f,
             correctlyGuessedLetters = emptyList,
             validInput = false,
@@ -134,7 +137,7 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
 
         checkInput(character)
         if (state.value.validInput) {
-            if (!guessedLettersList.contains(char.single())) {
+            if (!guessedLettersList.contains(character.single())) {
 
                 for (i in 0 until state.value.wordDrawn.length) {
                     newList.add(i, state.value.wordSoFar[i])
@@ -150,7 +153,7 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
                     newNumOfLives = numOfLives - 1
                     numOfLives = newNumOfLives
                 }
-                guessedLettersList.add(char.single())
+                guessedLettersList.add(character.single())
                 _uiState.value = _uiState.value.copy(
                         wordSoFar = newList,
                         amountOfLives = numOfLives,
@@ -168,9 +171,8 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
             }
         }
 
-    private fun updateWordDrawn(word : String){
-       var drawWord = word.toUpperCase()
-        state.value.wordDrawn = drawWord
+    private fun updateWordDrawn(){
+        _uiState.value = _uiState.value.copy(wordSoFar = mutableListOf())
         for (char : Char in state.value.wordDrawn){
             if (char == ' '){
                 state.value.wordSoFar.add('-')

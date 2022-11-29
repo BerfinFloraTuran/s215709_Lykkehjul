@@ -86,7 +86,7 @@ fun TopBar(navController: NavController, hasExit : Boolean, viewModel: Frontpage
             }
 
 
-            Box(modifier = Modifier.alpha(alpha)) {
+            Box(modifier = Modifier.alpha(alpha).padding(end=5.dp)) {
                 Row() {
                     Box(
                         Modifier
@@ -114,7 +114,8 @@ fun TopBar(navController: NavController, hasExit : Boolean, viewModel: Frontpage
                         Modifier
                             .background(Color.White, shape = RoundedCornerShape(10.dp))
                             .width(80.dp)
-                            .height(30.dp), contentAlignment = Alignment.CenterEnd){
+                            .height(30.dp)
+                            , contentAlignment = Alignment.CenterEnd){
                         Row() {
                             Text(
                                 text = "$balanceText",

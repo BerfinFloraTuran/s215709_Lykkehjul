@@ -1,6 +1,7 @@
 package com.example.a215709_lykkehjul.view
 
 import android.app.Activity
+import android.graphics.Color.alpha
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -22,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.alpha
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
 import com.example.a215709_lykkehjul.model.States
@@ -29,7 +31,7 @@ import com.example.a215709_lykkehjul.viewModel.FrontpageViewModel
 
 @Composable
 fun FrontPage( viewModel: FrontpageViewModel, navController : NavController){
-    val backgroundColor = "#FEE9E1"
+    val backgroundColor = "#fff8f6"
 
     val state = viewModel.state.value
 
@@ -42,8 +44,6 @@ fun FrontPage( viewModel: FrontpageViewModel, navController : NavController){
 
 @Composable
 fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Modifier, navController: NavController) {
-    var dropdownEnabled by remember { mutableStateOf(true) }
-
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()) {
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -65,7 +65,7 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
             Box(contentAlignment = Alignment.Center) {}
             IconButton(onClick = {
                 expanded = true
-            }, enabled = dropdownEnabled) {
+            }) {
                 Icon(
                     imageVector = Icons.Default.ArrowDropDown,
                     contentDescription = "",
@@ -77,8 +77,8 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
                     DropdownMenuItem(onClick = {
                         expanded = false
                         state.chosenCategory = itemValue
-                        dropdownEnabled = false
                         state.visibility = 100f
+                        viewModel.resetStates()
                         viewModel.randomWord(itemValue)
                         viewModel.resetGuessedLetters()
                     }, enabled = itemIndex != -1)
@@ -171,21 +171,24 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
             val balanceText = state.balance
             Text(text = "Balance: $balanceText", fontSize = 16.sp)
 
-
  */
+            val boxColor = "#66FFCCB8"
+            val color = Color(boxColor.toColorInt())
+
             Spacer(modifier = Modifier.height(70.dp))
             Box(
                 modifier = Modifier
-                    .background(Color.White, shape = RoundedCornerShape(30.dp))
+                    .background(color = color, shape = RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
                     .fillMaxWidth()
                     .height(250.dp),
                 contentAlignment = Alignment.TopCenter
             ) {
                 Column() {
                     Text(
-                        text = "Guessed letters:",
+                        text = "Guessed letters",
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier.padding(top=20.dp)
                     )
 
                     Spacer(modifier = Modifier.height(25.dp))
@@ -231,7 +234,6 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
                             lostDialogState.value = false
                             wonDialogState.value = false
                             character = ""
-                            dropdownEnabled = true
                         }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(buttonColor.toColorInt()))
                         ) {
                             Text(text = "New Game")
