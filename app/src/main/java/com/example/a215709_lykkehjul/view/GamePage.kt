@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,6 +19,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -26,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.graphics.alpha
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
+import com.example.a215709_lykkehjul.R
 import com.example.a215709_lykkehjul.model.States
 import com.example.a215709_lykkehjul.viewModel.FrontpageViewModel
 
@@ -62,7 +65,6 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
                 fontSize = 19.sp,
                 fontWeight = FontWeight.SemiBold
             )
-            Box(contentAlignment = Alignment.Center) {}
             IconButton(onClick = {
                 expanded = true
             }) {
@@ -77,7 +79,6 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
                     DropdownMenuItem(onClick = {
                         expanded = false
                         state.chosenCategory = itemValue
-                        state.visibility = 100f
                         viewModel.resetStates()
                         viewModel.randomWord(itemValue)
                         viewModel.resetGuessedLetters()
@@ -87,12 +88,22 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
                     }
                 }
             }
+            IconButton(onClick = {
+                viewModel.resetStates()
+                viewModel.randomCategory()
+                viewModel.resetGuessedLetters()
+            }) {
+                Icon(painter = painterResource(id = R.drawable.randomicon), contentDescription = "",
+                    Modifier
+                        .size(40.dp)
+                        .padding(bottom=15.dp)
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
         Column(
-            modifier = Modifier.alpha(state.visibility),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -178,7 +189,10 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
             Spacer(modifier = Modifier.height(70.dp))
             Box(
                 modifier = Modifier
-                    .background(color = color, shape = RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
+                    .background(
+                        color = color,
+                        shape = RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp)
+                    )
                     .fillMaxWidth()
                     .height(250.dp),
                 contentAlignment = Alignment.TopCenter

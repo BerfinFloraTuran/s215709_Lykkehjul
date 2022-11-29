@@ -14,7 +14,7 @@ class Controller {
     fun initCategoryData(){
         val animals = Category("Animals", listOf(Word("Tiger"), Word("Horse"), Word("Koala"), Word("Dog")))
         val countries = Category("Countries", listOf(Word("Turkey"), Word("Denmark"), Word("Kurdistan"), Word("Palestine")))
-        val programming_languages = Category("Programming Languages", listOf(Word("Java"), Word("Kotlin"), Word("SQL"), Word("Python")))
+        val programming_languages = Category("Coding", listOf(Word("Java"), Word("Kotlin"), Word("SQL"), Word("Python")))
         val instruments = Category("Instruments", listOf(Word("Piano"), Word("Guitar"), Word("Ukulele"), Word("Triangle")))
 
 

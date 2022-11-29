@@ -21,12 +21,12 @@ data class States(
     var titleList: MutableList<String> = mutableListOf(),
     var chosenCategory: String = "Animals",
     var chosenWord: String = "",
-    var visibility: Float = 0f,
     var errorMessageVisibility: Float = 0f,
     var correctlyGuessedLetters: MutableList<Char> = mutableListOf(),
     var validInput: Boolean = false,
     var guessEnabled: Boolean = false,
     var spinEnabled: Boolean = true,
     var isBankrupt: Boolean = false,
-    var dropDownEnabled: Boolean = true
+    var dropDownEnabled: Boolean = true,
+    var lettersToReveal: MutableList<Char> = mutableListOf()
 )

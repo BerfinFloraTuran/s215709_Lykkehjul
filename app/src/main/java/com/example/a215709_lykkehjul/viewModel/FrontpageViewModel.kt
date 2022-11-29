@@ -20,6 +20,51 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
     val state: State<States> = _uiState
 
 
+    fun revealWord(){
+        val word = state.value.wordDrawn
+        val lettersToReveal = mutableListOf<Char>()
+
+        for (i in 0 until word.length){
+            if (!word[i].equals(state.value.wordSoFar[i])){
+                lettersToReveal[i] = word[i]
+            } else{
+                lettersToReveal[i] = '-'
+            }
+        }
+        _uiState.value = _uiState.value.copy(lettersToReveal = lettersToReveal)
+    }
+
+    fun revealedString(){
+        val word = state.value.wordDrawn
+        val lettersToReveal = mutableListOf<Char>()
+        val list = mutableListOf<Char>()
+
+        for (i in 0 until word.length){
+            if (!word[i].equals(state.value.wordSoFar[i])){
+                lettersToReveal[i] = word[i]
+            } else{
+                lettersToReveal[i] = '-'
+            }
+        }
+
+        for (i  in 0 until state.value.wordSoFar.size){
+            if(!state.value.wordSoFar[i].isLetter()){
+                list.add(lettersToReveal[i])
+            } else {
+                list.add(state.value.wordSoFar[i])
+            }
+        }
+
+    }
+
+    fun randomCategory(){
+        val randomInt = Random.nextInt(categoryData.categories.size)
+        val randomCategoryTitle = categoryData.categories[randomInt].title
+
+        _uiState.value = _uiState.value.copy(chosenCategory = randomCategoryTitle)
+        randomWord(randomCategoryTitle)
+    }
+
     fun randomWord(title : String){
         var wordList = mutableListOf<Word>()
         for (category : Category in categoryData.categories){
@@ -57,7 +102,6 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
             gameLost = false,
             gameWon = false,
             chosenWord = "",
-            visibility = 100f,
             errorMessageVisibility = 0f,
             correctlyGuessedLetters = emptyList,
             validInput = false,
@@ -76,6 +120,7 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
     fun checkLost(){
         if (state.value.amountOfLives == 0){
             _uiState.value = _uiState.value.copy(gameLost = true)
+            revealWord()
         }
     }
 
