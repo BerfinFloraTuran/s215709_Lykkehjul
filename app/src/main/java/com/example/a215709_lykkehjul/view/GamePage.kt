@@ -245,6 +245,7 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
                     confirmButton = {
                         Button(onClick = {
                             viewModel.resetStates()
+                            viewModel.resetGuessedLetters()
                             lostDialogState.value = false
                             wonDialogState.value = false
                             character = ""

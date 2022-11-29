@@ -93,15 +93,15 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
         val emptyList = mutableListOf<Char>()
 
         _uiState.value = _uiState.value.copy(
-            wordDrawn = "",
-            wordSoFar = emptyList,
+            wordDrawn = "DOG",
+            wordSoFar = mutableListOf('_','_','_'),
             amountOfLives = 5,
             balance = 0,
             tempBalance = -1,
             guessedLetters = emptyList,
             gameLost = false,
             gameWon = false,
-            chosenWord = "",
+            chosenWord = "DOG",
             errorMessageVisibility = 0f,
             correctlyGuessedLetters = emptyList,
             validInput = false,
@@ -124,7 +124,6 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
     fun checkLost(){
         if (state.value.amountOfLives == 0){
             _uiState.value = _uiState.value.copy(gameLost = true)
-            revealWord()
         }
     }
 
