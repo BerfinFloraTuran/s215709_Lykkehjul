@@ -78,7 +78,7 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
                 categoryList.forEachIndexed { itemIndex, itemValue ->
                     DropdownMenuItem(onClick = {
                         expanded = false
-                        state.chosenCategory = itemValue
+                        viewModel.setChosenCategory(itemValue)
                         viewModel.resetStates()
                         viewModel.randomWord(itemValue)
                         viewModel.resetGuessedLetters()

@@ -110,6 +110,10 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
         )
     }
 
+    fun setChosenCategory(title : String){
+        _uiState.value = _uiState.value.copy(chosenCategory = title)
+    }
+
     fun resetGuessedLetters(){
         val emptyList = mutableListOf<Char>()
 
