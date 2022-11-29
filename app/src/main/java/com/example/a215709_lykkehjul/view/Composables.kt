@@ -31,7 +31,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.a215709_lykkehjul.R
 import com.example.a215709_lykkehjul.data.Controller
 import com.example.a215709_lykkehjul.model.States
-import com.example.a215709_lykkehjul.viewModel.GameViewModel
+import com.example.a215709_lykkehjul.viewModel.FrontpageViewModel
 
 @Composable
 fun NavController(){
@@ -39,31 +39,20 @@ fun NavController(){
     val navController = rememberNavController()
     var controller = Controller()
     controller.initializeData()
-    val gameViewModel = GameViewModel(controller.categoryData)
+    val frontpageViewModel = FrontpageViewModel(controller.categoryData)
 
-    NavHost(navController = navController, startDestination = Screen.StartGame.route) {
+    NavHost(navController = navController, startDestination = Screen.GamePage.route) {
         composable(route = Screen.GamePage.route) {
-            FrontPage(viewModel = gameViewModel, navController)
-        }
-        composable(route = Screen.StartGame.route){
-            StartPage(viewModel = gameViewModel, navController)
-        }
-        composable(route = Screen.WheelPage.route){
-            WheelSpinPage(viewModel = gameViewModel, navController)
-        }
-        composable(route = Screen.WonPage.route){
-            WonPage(viewModel = gameViewModel, navController)
-        }
-        composable(route = Screen.LostPage.route){
-            LostPage(viewModel = gameViewModel, navController)
+            FrontPage(viewModel = frontpageViewModel, navController)
         }
     }
 }
 
+
 val barColor = "#ffeef0"
 
 @Composable
-fun TopBar(navController: NavController, hasExit : Boolean, viewModel: GameViewModel, state: States) {
+fun TopBar(navController: NavController, hasExit : Boolean, viewModel: FrontpageViewModel, state: States) {
     var alpha = 0f
     var enabled = false
 
@@ -86,7 +75,6 @@ fun TopBar(navController: NavController, hasExit : Boolean, viewModel: GameViewM
         ) {
 
             IconButton(onClick = {
-                navController.navigate(Screen.StartGame.route)
                 viewModel.resetStates()
             }, modifier = Modifier.alpha(alpha), enabled = enabled) {
                 Icon(imageVector = Icons.Default.Close, contentDescription = "")
@@ -122,7 +110,7 @@ fun TopBar(navController: NavController, hasExit : Boolean, viewModel: GameViewM
                             Image(painter = painterResource(id = R.drawable.pointicon), contentDescription = "",
                                 Modifier
                                     .size(32.dp)
-                                .padding(end = 3.dp))
+                                    .padding(end = 3.dp))
                         }
                     }
                 }
