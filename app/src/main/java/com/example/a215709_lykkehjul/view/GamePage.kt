@@ -35,8 +35,8 @@ import com.example.a215709_lykkehjul.viewModel.FrontpageViewModel
 @Composable
 fun FrontPage( viewModel: FrontpageViewModel, navController : NavController){
     val backgroundColor = "#fff8f6"
-
     val state = viewModel.state.value
+
 
     Scaffold(
         backgroundColor = Color(backgroundColor.toColorInt()),

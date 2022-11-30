@@ -1,5 +1,6 @@
 package com.example.a215709_lykkehjul.view
 
+import androidx.compose.animation.*
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateSizeAsState
 import androidx.compose.foundation.BorderStroke
@@ -44,13 +45,15 @@ fun NavController(){
     controller.initializeData()
     val frontpageViewModel = FrontpageViewModel(controller.categoryData)
 
-    NavHost(navController = navController, startDestination = Screen.GamePage.route) {
+    NavHost(navController = navController, startDestination = Screen.NewGamePage.route) {
         composable(route = Screen.GamePage.route) {
             FrontPage(viewModel = frontpageViewModel, navController)
         }
+        composable(route = Screen.NewGamePage.route) {
+            StartPage(viewModel = frontpageViewModel, navController)
+        }
     }
 }
-
 
 val barColor = "#FFCCB8"
 
@@ -80,7 +83,7 @@ fun TopBar(navController: NavController, hasExit : Boolean, viewModel: Frontpage
         ) {
 
             IconButton(onClick = {
-                viewModel.resetStates()
+                navController.navigate(Screen.NewGamePage.route)
             }, modifier = Modifier.alpha(alpha), enabled = enabled) {
                 Icon(imageVector = Icons.Default.Close, contentDescription = "")
             }

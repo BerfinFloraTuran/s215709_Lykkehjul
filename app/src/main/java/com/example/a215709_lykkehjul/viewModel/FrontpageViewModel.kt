@@ -19,36 +19,35 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
     private val _uiState = mutableStateOf(States())
     val state: State<States> = _uiState
 
-
-    fun revealWord(){
+    fun revealWord() {
         val word = state.value.wordDrawn
         val lettersToReveal = mutableListOf<Char>()
 
-        for (i in 0 until word.length){
-            if (!word[i].equals(state.value.wordSoFar[i])){
+        for (i in 0 until word.length) {
+            if (!word[i].equals(state.value.wordSoFar[i])) {
                 lettersToReveal[i] = word[i]
-            } else{
+            } else {
                 lettersToReveal[i] = '-'
             }
         }
         _uiState.value = _uiState.value.copy(lettersToReveal = lettersToReveal)
     }
 
-    fun revealedString(){
+    fun revealedString() {
         val word = state.value.wordDrawn
         val lettersToReveal = mutableListOf<Char>()
         val list = mutableListOf<Char>()
 
-        for (i in 0 until word.length){
-            if (!word[i].equals(state.value.wordSoFar[i])){
+        for (i in 0 until word.length) {
+            if (!word[i].equals(state.value.wordSoFar[i])) {
                 lettersToReveal[i] = word[i]
-            } else{
+            } else {
                 lettersToReveal[i] = '-'
             }
         }
 
-        for (i  in 0 until state.value.wordSoFar.size){
-            if(!state.value.wordSoFar[i].isLetter()){
+        for (i in 0 until state.value.wordSoFar.size) {
+            if (!state.value.wordSoFar[i].isLetter()) {
                 list.add(lettersToReveal[i])
             } else {
                 list.add(state.value.wordSoFar[i])
@@ -57,7 +56,7 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
 
     }
 
-    fun randomCategory(){
+    fun randomCategory() {
         val randomInt = Random.nextInt(categoryData.categories.size)
         val randomCategoryTitle = categoryData.categories[randomInt].title
 
@@ -65,9 +64,9 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
         randomWord(randomCategoryTitle)
     }
 
-    fun randomWord(title : String){
+    fun randomWord(title: String) {
         var wordList = mutableListOf<Word>()
-        for (category : Category in categoryData.categories){
+        for (category: Category in categoryData.categories) {
             if (title.equals(category.title))
                 wordList = category.words.toMutableList()
         }
@@ -81,20 +80,20 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
         updateWordDrawn()
     }
 
-    fun categoryTitleList(){
+    fun categoryTitleList() {
         val titleList = mutableListOf<String>()
-        for (category : Category in categoryData.categories) {
+        for (category: Category in categoryData.categories) {
             titleList.add(category.title)
         }
-        _uiState.value = _uiState.value.copy(titleList=titleList)
+        _uiState.value = _uiState.value.copy(titleList = titleList)
     }
 
-    fun resetStates(){
+    fun resetStates() {
         val emptyList = mutableListOf<Char>()
 
         _uiState.value = _uiState.value.copy(
             wordDrawn = "DOG",
-            wordSoFar = mutableListOf('_','_','_'),
+            wordSoFar = mutableListOf('_', '_', '_'),
             amountOfLives = 5,
             balance = 0,
             tempBalance = -1,
@@ -110,65 +109,68 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
         )
     }
 
-    fun setChosenCategory(title : String){
+    fun setChosenCategory(title: String) {
         _uiState.value = _uiState.value.copy(chosenCategory = title)
     }
 
-    fun resetGuessedLetters(){
+    fun resetGuessedLetters() {
         val emptyList = mutableListOf<Char>()
 
         _uiState.value = _uiState.value.copy(guessedLetters = emptyList)
     }
 
 
-    fun checkLost(){
-        if (state.value.amountOfLives == 0){
+    fun checkLost() {
+        if (state.value.amountOfLives == 0) {
             _uiState.value = _uiState.value.copy(gameLost = true)
         }
     }
 
-    fun checkInput(character : String){
-            if (character.length==1 && character.single() in 'A'..'Z') {
-                _uiState.value = _uiState.value.copy(errorMessageVisibility = 0f, validInput = true)
-            }
-        else {
-                _uiState.value = _uiState.value.copy(errorMessageVisibility = 100f, validInput = false)
+    fun checkInput(character: String) {
+        if (character.length == 1 && character.single() in 'A'..'Z') {
+            _uiState.value = _uiState.value.copy(errorMessageVisibility = 0f, validInput = true)
+        } else {
+            _uiState.value = _uiState.value.copy(errorMessageVisibility = 100f, validInput = false)
         }
     }
 
-    fun checkWin(){
+    fun checkWin() {
         var guessedCorrectly = false
         var correctlyGuessed = 0
         var lettersToGuess = 0
-        for (i in 0 until state.value.wordDrawn.length){
-            if(!state.value.wordDrawn[i].equals(" ")){
+        for (i in 0 until state.value.wordDrawn.length) {
+            if (!state.value.wordDrawn[i].equals(" ")) {
                 lettersToGuess = lettersToGuess + 1
             }
-           if (!state.value.wordDrawn[i].equals(" ") && state.value.wordSoFar[i].equals(state.value.wordDrawn[i])){
-               correctlyGuessed = correctlyGuessed + 1
-           }
-            if (!state.value.wordDrawn[i].equals(" ") && !state.value.wordSoFar[i].equals(state.value.wordDrawn[i])){
+            if (!state.value.wordDrawn[i].equals(" ") && state.value.wordSoFar[i].equals(state.value.wordDrawn[i])) {
+                correctlyGuessed = correctlyGuessed + 1
+            }
+            if (!state.value.wordDrawn[i].equals(" ") && !state.value.wordSoFar[i].equals(state.value.wordDrawn[i])) {
                 guessedCorrectly = false
             }
         }
-        if (correctlyGuessed == lettersToGuess){
+        if (correctlyGuessed == lettersToGuess) {
             guessedCorrectly = true
         }
 
         _uiState.value = _uiState.value.copy(gameWon = guessedCorrectly)
     }
 
-    fun spinTheWheel(){
-        val listOfPoint = listOf(1000,900,800,700,600,500,400,300,200,100,-1)
+    fun spinTheWheel() {
+        val listOfPoint = listOf(1000, 900, 800, 700, 600, 500, 400, 300, 200, 100, -1)
         val randomIndex = Random.nextInt(listOfPoint.size)
         val randomValue = listOfPoint[randomIndex]
 
-        if (randomValue == -1){
+        if (randomValue == -1) {
             _uiState.value = _uiState.value.copy(balance = 0, isBankrupt = true, tempBalance = 0)
             return
         } else {
             var newBalance = randomValue
-            _uiState.value = _uiState.value.copy(tempBalance = newBalance, guessEnabled = true, spinEnabled = false)
+            _uiState.value = _uiState.value.copy(
+                tempBalance = newBalance,
+                guessEnabled = true,
+                spinEnabled = false
+            )
         }
     }
 
@@ -197,27 +199,29 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
                     }
                 }
                 balance += tempBalance * numOfLetters
+
                 if (!state.value.wordDrawn.contains(character)) {
                     newNumOfLives = numOfLives - 1
                     numOfLives = newNumOfLives
                 }
                 guessedLettersList.add(character.single())
+
                 _uiState.value = _uiState.value.copy(
-                        wordSoFar = newList,
-                        amountOfLives = numOfLives,
-                        balance = balance,
-                        tempBalance = -1,
-                        guessedLetters = guessedLettersList,
-                        errorMessageVisibility = 0f,
-                        validInput = true,
-                        spinEnabled = true,
-                        guessEnabled = false
-                    )
-                }
-            } else {
-                return
+                    wordSoFar = newList,
+                    amountOfLives = numOfLives,
+                    balance = balance,
+                    tempBalance = -1,
+                    guessedLetters = guessedLettersList,
+                    errorMessageVisibility = 0f,
+                    validInput = true,
+                    spinEnabled = true,
+                    guessEnabled = false
+                )
             }
+        } else {
+            return
         }
+    }
 
     private fun updateWordDrawn(){
         _uiState.value = _uiState.value.copy(wordSoFar = mutableListOf())
