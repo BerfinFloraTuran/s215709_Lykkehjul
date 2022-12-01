@@ -10,8 +10,8 @@ data class Word(
 )
 
 data class States(
-    var wordDrawn: String = "DOG",
-    var wordSoFar: MutableList<Char> = mutableListOf<Char>('_','_','_'),
+    var wordDrawn: String = "",
+    var wordSoFar: MutableList<Char> = mutableListOf<Char>(),
     var amountOfLives: Int = 5,
     var balance: Int = 0,
     var tempBalance: Int = -1,
@@ -19,8 +19,8 @@ data class States(
     var gameLost: Boolean = false,
     var gameWon: Boolean = false,
     var titleList: MutableList<String> = mutableListOf(),
-    var chosenCategory: String = "Animals",
-    var chosenWord: String = "DOG",
+    var chosenCategory: String = "",
+    var chosenWord: String = "",
     var errorMessageVisibility: Float = 0f,
     var correctlyGuessedLetters: MutableList<Char> = mutableListOf(),
     var validInput: Boolean = false,

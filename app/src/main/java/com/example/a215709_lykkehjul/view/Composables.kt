@@ -52,6 +52,9 @@ fun NavController(){
         composable(route = Screen.NewGamePage.route) {
             StartPage(viewModel = frontpageViewModel, navController)
         }
+        composable(route = Screen.RulePage.route) {
+            RulePage(viewModel = frontpageViewModel, navController)
+        }
     }
 }
 
@@ -81,11 +84,18 @@ fun TopBar(navController: NavController, hasExit : Boolean, viewModel: Frontpage
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-
-            IconButton(onClick = {
-                navController.navigate(Screen.NewGamePage.route)
-            }, modifier = Modifier.alpha(alpha), enabled = enabled) {
-                Icon(imageVector = Icons.Default.Close, contentDescription = "")
+            if(hasExit) {
+                IconButton(onClick = {
+                    navController.navigate(Screen.NewGamePage.route)
+                }, modifier = Modifier.alpha(alpha), enabled = enabled) {
+                    Icon(imageVector = Icons.Default.Close, contentDescription = "")
+                }
+            } else{
+                IconButton(onClick = {
+                    navController.navigate(Screen.RulePage.route)
+                }) {
+                    Icon(imageVector = Icons.Default.Info, contentDescription = "", tint = Color.Black)
+                }
             }
 
 
