@@ -36,7 +36,7 @@ import com.example.a215709_lykkehjul.viewModel.FrontpageViewModel
 fun StartPage( viewModel: FrontpageViewModel, navController : NavController){
     val backgroundColor = "#fff8f6"
     val state = viewModel.state.value
-    viewModel.randomCategory()
+   // viewModel.randomCategory()
 
 
     Scaffold(

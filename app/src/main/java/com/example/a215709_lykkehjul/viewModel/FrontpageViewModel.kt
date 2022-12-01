@@ -88,19 +88,21 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
         _uiState.value = _uiState.value.copy(titleList = titleList)
     }
 
-    fun resetStates() {
+    fun resetStates(){
         val emptyList = mutableListOf<Char>()
+        resetGuessedLetters()
+        randomCategory()
 
         _uiState.value = _uiState.value.copy(
-            wordDrawn = "DOG",
-            wordSoFar = mutableListOf('_', '_', '_'),
+            //wordDrawn = "",
+           // wordSoFar = emptyList,
             amountOfLives = 5,
             balance = 0,
             tempBalance = -1,
-            guessedLetters = emptyList,
+            //guessedLetters = emptyList,
             gameLost = false,
             gameWon = false,
-            chosenWord = "DOG",
+            //chosenWord = "",
             errorMessageVisibility = 0f,
             correctlyGuessedLetters = emptyList,
             validInput = false,
@@ -198,14 +200,14 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
                         correctlyGuessedLetters.add(character.single())
                     }
                 }
-                balance += tempBalance * numOfLetters
 
+                balance += tempBalance * numOfLetters
                 if (!state.value.wordDrawn.contains(character)) {
                     newNumOfLives = numOfLives - 1
                     numOfLives = newNumOfLives
                 }
-                guessedLettersList.add(character.single())
 
+                guessedLettersList.add(character.single())
                 _uiState.value = _uiState.value.copy(
                     wordSoFar = newList,
                     amountOfLives = numOfLives,
@@ -221,7 +223,7 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
         } else {
             return
         }
-    }
+        }
 
     private fun updateWordDrawn(){
         _uiState.value = _uiState.value.copy(wordSoFar = mutableListOf())
