@@ -34,7 +34,7 @@ fun NavController(){
     val navController = rememberNavController()
 
     //Initializes data (predefines categories and words)
-    var controller = Controller()
+    val controller = Controller()
     controller.initializeData()
 
     //Saves viewmodel in variable for easy access
@@ -54,10 +54,10 @@ fun NavController(){
     }
 }
 
-val barColor = "#FFCCB8"
+const val barColor = "#FFCCB8"
 
 @Composable
-fun TopBar(navController: NavController, inGame : Boolean, viewModel: FrontpageViewModel, state: States) {
+fun TopBar(navController: NavController, inGame : Boolean, state: States) {
     //sets up variables to use
     var alpha = 0f
     var enabled = false

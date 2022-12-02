@@ -16,7 +16,7 @@ States that can be changed during the game are saved here.
  */
 data class States(
     var chosenWord: String = "",
-    var charGuessList: MutableList<Char> = mutableListOf<Char>(),
+    var charGuessList: MutableList<Char> = mutableListOf(),
     var life: Int = 5,
     var balance: Int = 0,
     var wheelResult: Int = -1,

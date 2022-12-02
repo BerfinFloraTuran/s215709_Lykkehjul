@@ -21,23 +21,21 @@ import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
 import com.example.a215709_lykkehjul.R
-import com.example.a215709_lykkehjul.model.States
 import com.example.a215709_lykkehjul.viewModel.FrontpageViewModel
 
 @Composable
 fun RulePage( viewModel: FrontpageViewModel, navController : NavController){
     val backgroundColor = "#fff8f6"
-    val state = viewModel.state.value
 
 
     Scaffold(
         backgroundColor = Color(backgroundColor.toColorInt()),
-        content = {  paddingValues -> RulePageContent(viewModel, state, modifier = Modifier.padding(paddingValues), navController) }
+        content = {  paddingValues -> RulePageContent(viewModel, modifier = Modifier.padding(paddingValues), navController) }
     )
 }
 
 @Composable
-fun RulePageContent(viewModel: FrontpageViewModel, state: States, modifier: Modifier, navController: NavController) {
+fun RulePageContent(viewModel: FrontpageViewModel, modifier: Modifier, navController: NavController) {
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()) {
         Spacer(modifier = Modifier.height(20.dp))
         Text(
@@ -108,7 +106,7 @@ fun RulePageContent(viewModel: FrontpageViewModel, state: States, modifier: Modi
                 .width(50.dp)
                 .height(30.dp), contentAlignment = Alignment.CenterEnd
         ) {
-            Row() {
+            Row {
                 Text(
                     text = "0",
                     modifier = Modifier.padding(top = 2.dp, end = 5.dp)

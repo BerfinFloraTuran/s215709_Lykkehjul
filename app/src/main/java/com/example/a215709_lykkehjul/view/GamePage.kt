@@ -33,13 +33,13 @@ fun FrontPage( viewModel: FrontpageViewModel, navController : NavController){
 
     Scaffold(
         backgroundColor = Color(backgroundColor.toColorInt()),
-        topBar = { TopBar(navController, true,viewModel,state) },
-        content = {  paddingValues -> FrontPageContent(viewModel, state, modifier = Modifier.padding(paddingValues), navController) }
+        topBar = { TopBar(navController, true,state) },
+        content = {  paddingValues -> FrontPageContent(viewModel, state, modifier = Modifier.padding(paddingValues)) }
     )
 }
 
 @Composable
-fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Modifier, navController: NavController) {
+fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Modifier) {
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()) {
 
         //mutableStateOf in one place
@@ -207,7 +207,7 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
                     .height(250.dp),
                 contentAlignment = Alignment.TopCenter
             ) {
-                Column() {
+                Column {
                     Text(
                         stringResource(id = R.string.guessed_letters_cpt),
                         fontSize = 18.sp,
@@ -233,6 +233,7 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
             Checks if game is lost or won.
             Updates the dialog-text accordingly.
             Shows an alert dialog with two buttons: Exit and New Game
+            Inspiration from: https://developer.android.com/develop/ui/views/components/dialogs
              */
             if (state.hasLost || state.hasWon) {
                 if (state.hasLost) {

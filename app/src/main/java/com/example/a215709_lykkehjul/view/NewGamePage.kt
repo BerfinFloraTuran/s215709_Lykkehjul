@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
 import com.example.a215709_lykkehjul.R
-import com.example.a215709_lykkehjul.model.States
 import com.example.a215709_lykkehjul.viewModel.FrontpageViewModel
 
 @Composable
@@ -30,13 +29,13 @@ fun StartPage( viewModel: FrontpageViewModel, navController : NavController){
 
     Scaffold(
         backgroundColor = Color(backgroundColor.toColorInt()),
-        topBar = { TopBar(navController, false, viewModel,state) },
-        content = {  paddingValues -> StartPageContent(viewModel, state, modifier = Modifier.padding(paddingValues), navController) }
+        topBar = { TopBar(navController, false,state) },
+        content = {  paddingValues -> StartPageContent(viewModel, modifier = Modifier.padding(paddingValues), navController) }
     )
 }
 
 @Composable
-fun StartPageContent(viewModel: FrontpageViewModel, state: States, modifier: Modifier, navController: NavController) {
+fun StartPageContent(viewModel: FrontpageViewModel, modifier: Modifier, navController: NavController) {
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()) {
         Spacer (modifier = Modifier.height(20.dp))
 

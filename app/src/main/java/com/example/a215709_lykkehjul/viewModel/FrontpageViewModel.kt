@@ -10,14 +10,15 @@ import com.example.a215709_lykkehjul.model.States
 class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
 
     //To access states. One is mutable, the other is not.
-    private val _uiState = mutableStateOf(States())
-    val state: State<States> = _uiState
+    //Checked by TA Asama
+    private val _state = mutableStateOf(States())
+    val state: State<States> = _state
 
     //function to pick out random category
     fun randomCategory() {
         val randomCategoryTitle = categoryData.categories.random().title
 
-        _uiState.value = _uiState.value.copy(chosenCategory = randomCategoryTitle)
+        _state.value = _state.value.copy(chosenCategory = randomCategoryTitle)
         randomWord(randomCategoryTitle)
     }
 
@@ -31,7 +32,7 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
             }
         }
 
-        _uiState.value = _uiState.value.copy(chosenWord = word)
+        _state.value = _state.value.copy(chosenWord = word)
         updateChosenWord()
     }
 
@@ -41,7 +42,7 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
         for (category: Category in categoryData.categories) {
             titleList.add(category.title)
         }
-        _uiState.value = _uiState.value.copy(categoryTitleList = titleList)
+        _state.value = _state.value.copy(categoryTitleList = titleList)
     }
 
     //Resets all states for new game
@@ -50,7 +51,7 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
         resetGuessedLetters()
         randomCategory()
 
-        _uiState.value = _uiState.value.copy(
+        _state.value = _state.value.copy(
             life = 5,
             balance = 0,
             wheelResult = -1,
@@ -65,28 +66,28 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
     }
 
     fun setChosenCategory(title: String) {
-        _uiState.value = _uiState.value.copy(chosenCategory = title)
+        _state.value = _state.value.copy(chosenCategory = title)
     }
 
     fun resetGuessedLetters() {
         val emptyList = mutableListOf<Char>()
 
-        _uiState.value = _uiState.value.copy(guessedLetters = emptyList)
+        _state.value = _state.value.copy(guessedLetters = emptyList)
     }
 
     //Checks if player has 0 lives. Sets hasLost to true, if life is = 0
     fun checkLost() {
         if (state.value.life == 0) {
-            _uiState.value = _uiState.value.copy(hasLost = true)
+            _state.value = _state.value.copy(hasLost = true)
         }
     }
 
     //Checks if input is valid
-    fun checkInput(character: String) {
+    private fun checkInput(character: String) {
         if (character.length == 1 && character.single() in 'A'..'Z') {
-            _uiState.value = _uiState.value.copy(errorMessageVisibility = 0f, isValidInput = true)
+            _state.value = _state.value.copy(errorMessageVisibility = 0f, isValidInput = true)
         } else {
-            _uiState.value = _uiState.value.copy(errorMessageVisibility = 100f, isValidInput = false)
+            _state.value = _state.value.copy(errorMessageVisibility = 100f, isValidInput = false)
         }
     }
 
@@ -110,7 +111,7 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
             guessedCorrectly = true
         }
 
-        _uiState.value = _uiState.value.copy(hasWon = guessedCorrectly)
+        _state.value = _state.value.copy(hasWon = guessedCorrectly)
     }
 
     //Spins the wheel and sets player balance to 0 if result is bankrupt (-1)
@@ -120,19 +121,18 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
         val randomValue = listOfPoint.random()
 
         if (randomValue == -1) {
-            _uiState.value = _uiState.value.copy(balance = 0, isBankrupt = true, wheelResult = 0)
+            _state.value = _state.value.copy(balance = 0, isBankrupt = true, wheelResult = 0)
             return
         } else {
-            var newBalance = randomValue
-            _uiState.value = _uiState.value.copy(
-                wheelResult = newBalance,
+            _state.value = _state.value.copy(
+                wheelResult = randomValue,
                 guessEnabled = true,
                 spinEnabled = false
             )
         }
     }
 
-    //Updates the charGuessList with new updated list. Has responsibilty of updating life, balance and charGuessList.
+    //Updates the charGuessList with new updated list. Has responsibility of updating life, balance and charGuessList.
     fun updateWordSoFar(char: String) {
         val character = char.toUpperCase()
         val newList = mutableListOf<Char>()
@@ -165,7 +165,7 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
                 }
 
                 guessedLettersList.add(character.single())
-                _uiState.value = _uiState.value.copy(
+                _state.value = _state.value.copy(
                     charGuessList = newList,
                     life = numOfLives,
                     balance = balance,
@@ -184,7 +184,7 @@ class FrontpageViewModel(private var categoryData: CategoryData) : ViewModel() {
 
 
     private fun updateChosenWord(){
-        _uiState.value = _uiState.value.copy(charGuessList = mutableListOf())
+        _state.value = _state.value.copy(charGuessList = mutableListOf())
         for (char : Char in state.value.chosenWord){
             if (char == ' '){
                 state.value.charGuessList.add('-')
