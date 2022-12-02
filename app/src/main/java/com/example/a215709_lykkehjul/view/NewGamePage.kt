@@ -26,8 +26,6 @@ import com.example.a215709_lykkehjul.viewModel.FrontpageViewModel
 fun StartPage( viewModel: FrontpageViewModel, navController : NavController){
     val backgroundColor = "#fff8f6"
     val state = viewModel.state.value
-   // viewModel.randomCategory()
-
 
     Scaffold(
         backgroundColor = Color(backgroundColor.toColorInt()),
@@ -39,29 +37,25 @@ fun StartPage( viewModel: FrontpageViewModel, navController : NavController){
 @Composable
 fun StartPageContent(viewModel: FrontpageViewModel, state: States, modifier: Modifier, navController: NavController) {
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()) {
-        Spacer(modifier = Modifier.height(20.dp))
-        Text("Wheel of Fortune",
-            fontFamily = FontFamily.Monospace,
-            fontWeight = FontWeight.ExtraBold,
-            fontSize = 30.sp)
+        Spacer (modifier = Modifier.height(20.dp))
+        Box(contentAlignment = Alignment.Center, modifier = Modifier
+            .fillMaxWidth()) {
+            Image(painter = painterResource(id = R.drawable.logo), contentDescription = "", Modifier.size(300.dp))
+        }
         Spacer(modifier = Modifier.height(10.dp))
         Text("Click the button below to start the game or click the information icon to read the game guide.",
             fontWeight = FontWeight.Medium,
-            fontSize = 20.sp,
-        fontFamily = FontFamily.Monospace,
+            fontSize = 25.sp,
+        fontFamily = FontFamily.Serif,
             textAlign = TextAlign.Center)
         Text("Good luck! :)",
             fontWeight = FontWeight.Medium,
-            fontSize = 20.sp,
-            fontFamily = FontFamily.Monospace,
+            fontSize = 25.sp,
+            fontFamily = FontFamily.Serif,
             textAlign = TextAlign.Center)
 
-        Box(contentAlignment = Alignment.Center, modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 30.dp)) {
-            Image(painter = painterResource(id = R.drawable.palmillustration), contentDescription = "", Modifier.size(300.dp))
-        }
-        Spacer(modifier = Modifier.height(15.dp))
+
+        Spacer(modifier = Modifier.height(30.dp))
         val buttonColor = "#FFCCB8"
         Box(contentAlignment = Alignment.Center) {
             Button(onClick = {
@@ -72,11 +66,10 @@ fun StartPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
             },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(buttonColor.toColorInt())),
                 modifier = Modifier
-                .padding(start = 90.dp)
                 .size(170.dp, 40.dp)) {
                 Text(text = "Start Game!",
                 fontSize = 18.sp,
-                fontFamily = FontFamily.Monospace)
+                fontFamily = FontFamily.Serif)
             }
         }
     }
