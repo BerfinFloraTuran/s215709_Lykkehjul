@@ -1,3 +1,24 @@
 <resources>
-    <string name="app_name">215709_Lykkehjul</string>
+    <string name="app_name">s215709_Lykkehjul</string>
+    <string name="intro">"Click the button below to start the game or click the information icon to read the game guide."</string>
+    <string name="good_luck">Good luck! :)</string>
+    <string name="start_game">Start Game!</string>
+    <string name="guide_title">How to play</string>
+    <string name="rule_intro">When you start the game, a random category will be chosen for you.</string>
+    <string name="dropdownText">You can choose a new category by using the dropdown menu.</string>
+    <string name="shuffleText">Or you can have the app choose a random category for you!</string>
+    <string name="howToWin">You win the game by guessing all of the letters!</string>
+    <string name="howToLose">You lose the game by losing all of your lives.</string>
+    <string name="category">Category: </string>
+    <string name="bankrupt">BANKRUPT. Try again.</string>
+    <string name="spin_wheel">Spin the wheel using the button below.</string>
+    <string name="spin_wheel_btn">Spin the wheel</string>
+    <string name="input_error_msg">Please input one letter</string>
+    <string name="guessed_letters_cpt">Guessed letters</string>
+    <string name="game_lost_title">You lost.</string>
+    <string name="game_won_title">You won!</string>
+    <string name="game_lost_dialog">You have used all of your lives and lost the game.
+        Please restart or exit the game.</string>
+    <string name="game_won_dialog">You guessed the word and won the game!
+         Please restart or exit the game.</string>
 </resources>

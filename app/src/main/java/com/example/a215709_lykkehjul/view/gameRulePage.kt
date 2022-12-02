@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -40,7 +41,7 @@ fun RulePageContent(viewModel: FrontpageViewModel, state: States, modifier: Modi
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()) {
         Spacer(modifier = Modifier.height(20.dp))
         Text(
-            "How to play",
+            stringResource(id = R.string.guide_title),
             fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.ExtraBold,
             fontSize = 30.sp
@@ -48,7 +49,7 @@ fun RulePageContent(viewModel: FrontpageViewModel, state: States, modifier: Modi
         Spacer(modifier = Modifier.height(10.dp))
 
         Text(
-            text = "When you start the game, a random category will be chosen for you.",
+            text =  stringResource(id = R.string.rule_intro),
             fontWeight = FontWeight.Medium,
             fontSize = 17.sp,
             fontFamily = FontFamily.Monospace,
@@ -58,7 +59,7 @@ fun RulePageContent(viewModel: FrontpageViewModel, state: States, modifier: Modi
         Spacer(modifier = Modifier.height(10.dp))
 
         Text(
-            text = "You can choose a new category by using the dropdown menu.",
+            text = stringResource(id = R.string.dropdownText),
             fontWeight = FontWeight.Medium,
             fontSize = 17.sp,
             fontFamily = FontFamily.Monospace,
@@ -72,7 +73,7 @@ fun RulePageContent(viewModel: FrontpageViewModel, state: States, modifier: Modi
 
         Spacer(modifier = Modifier.height(20.dp))
         Text(
-            text = "Or you can have the app choose a random category for you!",
+            text = stringResource(id = R.string.shuffleText),
             fontWeight = FontWeight.Medium,
             fontSize = 17.sp,
             fontFamily = FontFamily.Monospace,
@@ -80,13 +81,13 @@ fun RulePageContent(viewModel: FrontpageViewModel, state: States, modifier: Modi
         )
         Spacer(modifier = Modifier.height(10.dp))
         Icon(
-            painter = painterResource(id = R.drawable.randomicon), contentDescription = "",
+            painter = painterResource(id = R.drawable.shuffleicon), contentDescription = "",
             Modifier
                 .size(50.dp)
                 .padding(bottom = 15.dp)
         )
         Text(
-            text = "You win the game by guessing all of the letters!",
+            text = stringResource(id = R.string.howToWin),
             fontWeight = FontWeight.Medium,
             fontSize = 17.sp,
             fontFamily = FontFamily.Monospace,
@@ -94,7 +95,7 @@ fun RulePageContent(viewModel: FrontpageViewModel, state: States, modifier: Modi
         )
         Spacer(modifier = Modifier.height(10.dp))
         Text(
-            text = "You lose the game by losing all of your lives.",
+            text = stringResource(id = R.string.howToLose),
             fontWeight = FontWeight.Medium,
             fontSize = 17.sp,
             fontFamily = FontFamily.Monospace,
@@ -136,7 +137,7 @@ fun RulePageContent(viewModel: FrontpageViewModel, state: States, modifier: Modi
                         .size(170.dp, 40.dp)
                 ) {
                     Text(
-                        text = "Start Game!",
+                        stringResource(id = R.string.start_game),
                         fontSize = 18.sp,
                         fontFamily = FontFamily.Monospace
                     )

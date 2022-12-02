@@ -1,31 +1,24 @@
 package com.example.a215709_lykkehjul.view
 
 import android.app.Activity
-import android.graphics.Color.alpha
-import androidx.compose.animation.Animatable
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.graphics.alpha
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
 import com.example.a215709_lykkehjul.R
@@ -49,22 +42,39 @@ fun FrontPage( viewModel: FrontpageViewModel, navController : NavController){
 fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Modifier, navController: NavController) {
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()) {
 
-        Spacer(modifier = Modifier.height(20.dp))
-
-        val categoryTitle = state.chosenCategory
-
-        viewModel.categoryTitleList()
-
-        val categoryList = state.titleList
-
+        //mutableStateOf in one place
         var expanded by remember { mutableStateOf(false) }
+        var character by remember { mutableStateOf("") }
+        val lostDialogState = remember { mutableStateOf(state.hasLost) }
+        val wonDialogState = remember { mutableStateOf(state.hasWon) }
+
+        //empty text for alertdialog
+        var textToShow = ""
+        var titleText = ""
+
+        //values from state saved in easily accessible variables
+        val categoryTitle = state.chosenCategory
+        val categoryList = state.categoryTitleList
+        val point = state.wheelResult
+
+        //colors saved as strings
+        val dialogCol = "#FFEBE3"
+        val buttonColor = "#FFCCB8"
+        val boxColor = "#66FFCCB8"
+        val color = Color(boxColor.toColorInt())
+
+        //Text to show chosen category
+        Spacer(modifier = Modifier.height(20.dp))
+        viewModel.categoryTitleList()
+        val category = stringResource(id = R.string.category)
 
         Row(modifier = Modifier.padding(start = 30.dp)) {
-            Text(
-                text = "Category: $categoryTitle",
+            Text( text = "$category $categoryTitle",
                 fontSize = 19.sp,
                 fontWeight = FontWeight.SemiBold
             )
+
+            //Icon to expand dropdown menu
             IconButton(onClick = {
                 expanded = true
             }) {
@@ -74,9 +84,13 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
                     modifier = Modifier.padding(bottom = 20.dp)
                 )
             }
+
+            //Dropdown menu to pick a category
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                 categoryList.forEachIndexed { itemIndex, itemValue ->
                     DropdownMenuItem(onClick = {
+
+                        //closes dropdown menu, reset states and picks out a random word from the chosen category
                         expanded = false
                         viewModel.resetStates()
                         viewModel.setChosenCategory(itemValue)
@@ -88,15 +102,17 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
                     }
                 }
             }
+
+            //Shuffle icon to randomize chosen category/word
             IconButton(onClick = {
                 viewModel.resetStates()
                 viewModel.randomCategory()
                 viewModel.resetGuessedLetters()
             }) {
-                Icon(painter = painterResource(id = R.drawable.randomicon), contentDescription = "",
+                Icon(painter = painterResource(id = R.drawable.shuffleicon), contentDescription = "",
                     Modifier
                         .size(40.dp)
-                        .padding(bottom=15.dp)
+                        .padding(bottom = 15.dp)
                 )
             }
         }
@@ -107,19 +123,21 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            val point = state.tempBalance
+            //result of wheel spin
             var pointText = "$point"
             if (point == 0) {
-                pointText = "BANKRUPT. Try again."
+                pointText = stringResource(id = R.string.bankrupt)
             }
             if (point == -1) {
-                pointText = "Spin the wheel using the button below."
+                pointText = stringResource(id = R.string.spin_wheel)
             }
 
             Text(text = pointText, fontSize = 16.sp)
 
-            val buttonColor = "#FFCCB8"
+
             Spacer(modifier = Modifier.height(15.dp))
+
+            //Button to spin the wheel
             Button(
                 onClick = {
                     viewModel.spinTheWheel()
@@ -127,23 +145,22 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
                 enabled = state.spinEnabled,
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(buttonColor.toColorInt()))
             ) {
-                Text(text = "Spin the wheel")
-
+                Text(stringResource(id = R.string.spin_wheel_btn))
             }
 
             Spacer(modifier = Modifier.height(50.dp))
 
+            //Adds a underscore (_) and space for every character to guess.
             var lineWord = ""
-
-            for (i in 0 until state.wordSoFar.size) {
-                lineWord = lineWord + state.wordSoFar[i] + " "
+            for (i in 0 until state.charGuessList.size) {
+                lineWord = lineWord + state.charGuessList[i] + " "
             }
 
             Text(text = lineWord, fontSize = 25.sp)
-            var character by remember { mutableStateOf("") }
 
             Spacer(modifier = Modifier.height(20.dp))
 
+            //Input field to guess a letter
             OutlinedTextField(
                 value = character,
                 label = { Text(text = "Letter", textAlign = TextAlign.Center) },
@@ -155,12 +172,15 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
                 enabled = state.guessEnabled,
                 singleLine = true
             )
+
+            //Error message that turns visible if condition is met
             Row(modifier = Modifier.alpha(state.errorMessageVisibility)) {
-                Text(text = "Please input one letter", color = Color.Red)
+                Text(text = stringResource(id = R.string.input_error_msg), color = Color.Red)
             }
 
             Spacer(modifier = Modifier.height(10.dp))
 
+            //Button to guess letter
             Button(
                 onClick = {
                     viewModel.updateWordSoFar(character)
@@ -173,19 +193,9 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
             ) {
                 Text(text = "Guess")
             }
-/*
-            Spacer(modifier = Modifier.height(30.dp))
 
-            val livesText = state.amountOfLives
-            Text(text = "$livesText lives left", fontSize = 16.sp)
 
-            val balanceText = state.balance
-            Text(text = "Balance: $balanceText", fontSize = 16.sp)
-
- */
-            val boxColor = "#66FFCCB8"
-            val color = Color(boxColor.toColorInt())
-
+            //Space for guessed letters to show
             Spacer(modifier = Modifier.height(70.dp))
             Box(
                 modifier = Modifier
@@ -199,7 +209,7 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
             ) {
                 Column() {
                     Text(
-                        text = "Guessed letters",
+                        stringResource(id = R.string.guessed_letters_cpt),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Medium,
                         modifier = Modifier.padding(top=20.dp)
@@ -216,27 +226,22 @@ fun FrontPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
                 }
             }
 
-            // Divider(startIndent = 0.dp, thickness = 1.dp, color = Color.LightGray)
-
-
+            //Makes user able to exit app
             val activity = (LocalContext.current as? Activity)
 
-            val lostDialogState = remember { mutableStateOf(state.gameLost) }
-            val wonDialogState = remember { mutableStateOf(state.gameWon) }
-            var textToShow = ""
-            var titleText = ""
-            val dialogCol = "#FFEBE3"
-
-            if (state.gameLost || state.gameWon) {
-                if (state.gameLost) {
-                    textToShow = "You have used all of your lives and lost the game." +
-                            " Please restart or exit the game."
-                    titleText = "You lost."
+            /*
+            Checks if game is lost or won.
+            Updates the dialog-text accordingly.
+            Shows an alert dialog with two buttons: Exit and New Game
+             */
+            if (state.hasLost || state.hasWon) {
+                if (state.hasLost) {
+                    textToShow = stringResource(id = R.string.game_lost_dialog)
+                    titleText = stringResource(id = R.string.game_lost_dialog)
                 }
-                if (state.gameWon) {
-                    textToShow = "You guessed the word and won the game!" +
-                            " Please restart or exit the game. "
-                    titleText = "You won!"
+                if (state.hasWon) {
+                    textToShow = stringResource(id = R.string.game_won_dialog)
+                    titleText = stringResource(id = R.string.game_won_title)
                 }
                 AlertDialog(
                     onDismissRequest = { },

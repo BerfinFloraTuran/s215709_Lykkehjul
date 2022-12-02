@@ -1,12 +1,7 @@
 package com.example.a215709_lykkehjul.view
 
-import androidx.compose.animation.*
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateSizeAsState
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 
@@ -14,19 +9,13 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.outlined.Star
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -37,14 +26,21 @@ import com.example.a215709_lykkehjul.data.Controller
 import com.example.a215709_lykkehjul.model.States
 import com.example.a215709_lykkehjul.viewModel.FrontpageViewModel
 
+
+//Navigation controller to navigate between screens.
 @Composable
 fun NavController(){
 
     val navController = rememberNavController()
+
+    //Initializes data (predefines categories and words)
     var controller = Controller()
     controller.initializeData()
+
+    //Saves viewmodel in variable for easy access
     val frontpageViewModel = FrontpageViewModel(controller.categoryData)
 
+    //Routes are collected from Screen class.
     NavHost(navController = navController, startDestination = Screen.NewGamePage.route) {
         composable(route = Screen.GamePage.route) {
             FrontPage(viewModel = frontpageViewModel, navController)
@@ -61,20 +57,26 @@ fun NavController(){
 val barColor = "#FFCCB8"
 
 @Composable
-fun TopBar(navController: NavController, hasExit : Boolean, viewModel: FrontpageViewModel, state: States) {
+fun TopBar(navController: NavController, inGame : Boolean, viewModel: FrontpageViewModel, state: States) {
+    //sets up variables to use
     var alpha = 0f
     var enabled = false
 
-    val livesText = state.amountOfLives
+    //values from state saved in variable
+    val livesText = state.life
     val balanceText = state.balance
 
-    if (hasExit) {
+    //updates variables
+    if (inGame) {
         alpha = 100f
         enabled = true
     }
 
-
-
+    /*
+    Top bar with multiple icons.
+    If inGame is true, the top bar will have a point and life field and an exit iconbutton.
+    If inGame is false, only an informationIcon is showed.
+     */
     TopAppBar(
         backgroundColor = Color(barColor.toColorInt()),
         elevation = 5.dp,
@@ -84,7 +86,7 @@ fun TopBar(navController: NavController, hasExit : Boolean, viewModel: Frontpage
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if(hasExit) {
+            if(inGame) {
                 IconButton(onClick = {
                     navController.navigate(Screen.NewGamePage.route)
                 }, modifier = Modifier.alpha(alpha), enabled = enabled) {
@@ -143,13 +145,5 @@ fun TopBar(navController: NavController, hasExit : Boolean, viewModel: Frontpage
                 }
             }
         }
-    }
-}
-
-@Composable
-fun BottomBar(){
-    BottomAppBar(
-        backgroundColor = Color(barColor.toColorInt())
-    ) {
     }
 }

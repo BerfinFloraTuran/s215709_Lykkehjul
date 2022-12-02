@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -38,17 +39,23 @@ fun StartPage( viewModel: FrontpageViewModel, navController : NavController){
 fun StartPageContent(viewModel: FrontpageViewModel, state: States, modifier: Modifier, navController: NavController) {
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()) {
         Spacer (modifier = Modifier.height(20.dp))
+
+        //Logo
         Box(contentAlignment = Alignment.Center, modifier = Modifier
             .fillMaxWidth()) {
             Image(painter = painterResource(id = R.drawable.logo), contentDescription = "", Modifier.size(300.dp))
         }
+
         Spacer(modifier = Modifier.height(10.dp))
-        Text("Click the button below to start the game or click the information icon to read the game guide.",
+
+        //Intro text
+        Text(
+            stringResource(id = R.string.intro),
             fontWeight = FontWeight.Medium,
             fontSize = 25.sp,
         fontFamily = FontFamily.Serif,
             textAlign = TextAlign.Center)
-        Text("Good luck! :)",
+        Text(stringResource(id = R.string.good_luck),
             fontWeight = FontWeight.Medium,
             fontSize = 25.sp,
             fontFamily = FontFamily.Serif,
@@ -56,7 +63,11 @@ fun StartPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
 
 
         Spacer(modifier = Modifier.height(30.dp))
+
+
+        //Button to start game
         val buttonColor = "#FFCCB8"
+
         Box(contentAlignment = Alignment.Center) {
             Button(onClick = {
                 viewModel.resetStates()
@@ -67,7 +78,7 @@ fun StartPageContent(viewModel: FrontpageViewModel, state: States, modifier: Mod
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(buttonColor.toColorInt())),
                 modifier = Modifier
                 .size(170.dp, 40.dp)) {
-                Text(text = "Start Game!",
+                Text(text = stringResource(id = R.string.start_game),
                 fontSize = 18.sp,
                 fontFamily = FontFamily.Serif)
             }
